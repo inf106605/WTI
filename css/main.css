@@ -1,0 +1,145 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 2016-01-25, 18:02:36
+    Author     : Maciej
+*/
+
+@font-face {
+    src: url(../fonts/Amatic-Bold.ttf);
+    font-family: Amatic;
+    font-weight: bold;
+    font-stretch: extra-expanded;
+}
+
+body {
+    padding-top: 75px;/* Required padding for .navbar-fixed-top. Remove if using .navbar-static-top. Change if height of navigation changes. */
+    /* background-image: url(../img/white_paperboard_@2X.png) */
+}
+
+.navbar a{
+    font-family: Amatic;
+    font-size: 28px;
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+
+.navbar input{
+    height: 32px;
+    margin-top: 2px;
+}
+
+.navbar button[type="submit"]{
+    font-family: Amatic;
+    font-size: 18px;
+    letter-spacing: 1px;
+    height: 32px;
+    padding: 0px 12px;
+    padding-bottom: 4px;
+    margin-top: 2px;
+    margin-left: 5px;
+}
+
+h1, h2, h3, h4, h5{
+    font-family: Amatic;
+    letter-spacing: 1px;
+    margin-top: 0;
+    margin-bottom: 20px;
+}
+
+.list-group{
+    border: 1px solid #ddd;
+    border-radius: 8px;
+}
+
+.list-group-item{
+    border: none;
+    border-radius: 8px !important;
+}
+
+footer {
+    margin: 50px 0;
+}
+
+
+
+.box {
+    /* border: 1px solid #ddd; */
+    border-radius: 8px;
+    margin-bottom: 30px;
+    position: relative;
+    height: 256px;
+}
+
+.box .image {
+    height: 200px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    border-bottom: none;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.box .image img{
+    max-height: 100%;
+    margin: 0 auto;
+}
+
+.box .caption {
+    padding: 10px;
+    height: 56px;
+    width: 100%;
+    overflow: hidden;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    border-top: none;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    position: absolute;
+}
+
+.box .caption .price {
+    font-size: 18px;
+    /* line-height: 36px; */
+    /* float: right; */
+    position: absolute;
+    top: 18px;
+    right: 10px;
+}
+
+.box .caption button {
+    padding: 0;
+    border: none;
+    background: none;
+    font-family: Amatic;
+    font-size: 24px;
+    letter-spacing: 0.5px;
+    color: chocolate;
+    width: 100%;
+    text-align: left;
+}
+
+.box .caption .description{
+    margin-top: 12px;
+}
+
+.box .caption:hover{
+    height: auto;
+    z-index: 2;
+    background-color: #fff;
+    /* outline: 1px solid #ddd; */
+    position: absolute;
+}
+
+
+.big-button{
+    margin-top: 10px;
+    font-family: Amatic;
+    font-size: 26px;
+    letter-spacing: 1px;
+    padding-top: 4px;
+    padding-bottom: 8px;
+}

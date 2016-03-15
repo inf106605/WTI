@@ -1,0 +1,36 @@
+.box{
+    height: auto;
+}
+
+.box .caption{
+    position: relative !important;
+    height: auto;
+}
+
+.box .caption input{
+    width: 70px;
+    display: inline-block;
+    margin-top: 8px;
+    padding: 2px 10px;
+    height: 32px;
+}
+
+.box .caption .delete{
+    float: right;
+    cursor: pointer;
+    border: none;
+    color: rgba(0,0,0,0);
+    background-color: rgba(0,0,0,0);
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAABEklEQVRIS8WW4ZGCMBCF90EDduCVwCSNaAV6HWgl2oFagTYCNXgdeAXAc9ZRR5GQBCeaXwyTfR+7vGQXRVGMsixbAZiTPAJYlmV5kAHLWjshqVo/JLdN0yxhrd2KyOxRj+RvVVX6PngZY+YANq2AnQLYpRIDcYgLyROMMVqW8VCIS1z1SP5pBhMR2btq0ZdJn/hVbwp98G3sgoTGXACxkFBx1b0DQiGXoFe33CvczvYJEALp821XKV8AQyEuM3QCYiF9TnMCQiG+A/k9gM+KoXfX539yzJe3Leu1qU9cBQYftBDxW4+I2Zv+skt+XSduOMekLVNE/tM3fR1b8jxfi4iOHCcAizfHljWAkYgc6rpenAGBnhml7tRAnAAAAABJRU5ErkJggg==');
+    background-size: 20px;
+    background-repeat: no-repeat;
+    background-position: center;
+    width: 30px;
+    height: 30px;
+    margin-top: 10px;  
+}
+
+.big-button{
+    margin-top: 0;
+    margin-bottom: 10px;
+}
