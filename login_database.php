@@ -21,7 +21,7 @@
 
         function checkClient() {
 
-		include 'htdocs/db.php';
+		include('../db.php');
 		
 
             session_start(); //rozpoczęcie sesji

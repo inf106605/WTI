@@ -2,7 +2,7 @@
 
 session_start();
 
-include 'htdocs/db.php';
+include('../db.php');
 
 if (isset($_SESSION['user']) && isset($_POST['id_client']) && isset($_POST['id_order']) && isset($_POST['id_product']) && isset($_POST['amount_product'])) {
 

@@ -22,7 +22,7 @@
         function NewUser() {
 
             
-			include 'htdocs/db.php';
+		include('../db.php');
 			
             $surname = $_POST['surname'];
             $name = $_POST['name'];
@@ -109,7 +109,7 @@
         function SignUp() {
 
   
-			include 'htdocs/db.php';
+			include('../db.php');
   
             if (!empty($_POST['user'])) {   //checking the 'user' name which is from Sign-Up.html, is it empty or have some text
       

@@ -3,7 +3,7 @@
     <div class="list-group kategorie">
         <h3 class="list-group-item" style="background-color: #f5f5f5;">Kategorie</h3>
 
-		 <?php include 'htdocs/db.php'; ?>
+		 <?php include('../db.php'); ?>
         <?php
 
 	  
