@@ -33,14 +33,6 @@
 
                     if (isset($_SESSION['user']) && isset($_POST['id_orders'])) {
 
-
-
-                        $serverName = 'SZERYF-KOMPUTER';
-
-                        $connectionInfo = array('Database' => 'sklep_baza', 'CharacterSet' => 'UTF-8');
-
-                        $conn = sqlsrv_connect($serverName, $connectionInfo);
-
                         $id_product[] = 0;
                         $name_product[] = 0;
                         $price_product[] = 0;
@@ -49,7 +41,8 @@
                         $id_order = $_POST['id_orders'];
                         $nazwa_uzytkownika = $_SESSION['user'];
 
-                        $sql = "SELECT * FROM Products AS p 
+						
+						$sth = $dbh->prepare("SELECT * FROM Products AS p 
 							INNER JOIN OrdersProducts AS op
 							ON p.id_product=op.id_product
 							INNER JOIN Orders AS o 
@@ -57,23 +50,18 @@
 							INNER JOIN Client AS c 
 							ON c.id_client = o.id_client
 							WHERE c.user_login = ? 
-							AND o.id_order = ?";
-
-
-
-                        $params = array($nazwa_uzytkownika, $id_order);
-                        $stmt = sqlsrv_query($conn, $sql, $params);
-                        if ($stmt === false) {
-                            die(print_r(sqlsrv_errors(), true));
-                        }
-
-                        while ($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)) {
-
-                            $id_product[] = $row['id_product'];
-                            $name_product[] = $row['name'];
-                            $amount_products[] = $row['amount_products'];
-                            $price_product[] = $row['price_brutto'];
-                        }
+							AND o.id_order = ?");
+						$sth->execute(array($nazwa_uzytkownika, $id_order));
+						$results = $sth->fetchAll();
+							
+						foreach($results as $result) {
+						
+						    $id_product[] = $result['id_product'];
+                            $name_product[] = $result['name_product'];
+                            $amount_products[] = $result['amount_products'];
+                            $price_product[] = $result['price_brutto'];
+						
+						}
 
                         /*
                           // klassa TCPDF
@@ -251,6 +239,7 @@
 
                         echo '<b>Łączny koszt: ' . $laczny_koszt . ' zł</b><br><br>
                               <a href="orders_preview.php" class="btn btn-default big-button">Powrót</a>
+							  <center><a href="generate_factures_to_pdf.php" class="btn btn-default big-button">GENERUJ PDF</a></center>
                               </div>';
 
                         /*
@@ -259,28 +248,22 @@
 
 
                          */
-
-                        $sql5 = "SELECT * FROM Client AS c 
-		 INNER JOIN Addresses AS ad ON
-		 c.id_adress = ad.id_adress
-		 INNER JOIN Contact AS co ON
-		 co.id_contact = c.id_contact
-		 WHERE c.user_login = ?";
-
-
-
-                        $params5 = array($nazwa_uzytkownika);
-                        $stmt5 = sqlsrv_query($conn, $sql5, $params5);
-                        if ($stmt5 === false) {
-                            die(print_r(sqlsrv_errors(), true));
+						 
+						 
+						 $sth = $dbh->prepare("SELECT * FROM Client AS c 
+						INNER JOIN Addresses AS ad ON
+						c.id_adress = ad.id_adress
+						INNER JOIN Contact AS co ON
+						co.id_contact = c.id_contact
+						WHERE c.user_login = ?");
+						
+						$sth->execute(array($nazwa_uzytkownika));
+						$results = $sth->fetchAll();
+							
+						foreach($results as $result) {
+						 
+                            $dodatki = '<br /><br /><br />Dane klienta do faktury:<br /><br />Imie: ' . $result['surname'] . '<br />Nazwisko: ' . $result['name'] . '<br />Adres wysyłki: <br />Ulica: ' . $result['street'] . ' ' . $result['number_house'] . '<br />Kod pocztowy: ' . $result['postal_code'] . '<br />Miejscowość: ' . $result['city'] . '<br />Województwo: ' . $result['province'] . '<br />Kraj: ' . $result['country'] . '<br />';
                         }
-
-                        while ($row = sqlsrv_fetch_array($stmt5, SQLSRV_FETCH_ASSOC)) {
-
-                            $dodatki = '<br /><br /><br />Dane klienta do faktury:<br /><br />Imie: ' . $row['surname'] . '<br />Nazwisko: ' . $row['name_client'] . '<br />Adres wysyłki: <br />Ulica: ' . $row['street'] . ' ' . $row['number_house'] . '<br />Kod pocztowy: ' . $row['postal_code'] . '<br />Miejscowość: ' . $row['city'] . '<br />Województwo: ' . $row['province'] . '<br />Kraj: ' . $row['country'] . '<br />';
-                        }
-
-
 
                         /*
 

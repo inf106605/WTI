@@ -44,27 +44,10 @@
 							
 						foreach($results as $result) {
 							
+							$orders[] = $result['id_order'];
 							
 						}
 						
-						
-
-                        $sql2 = "SELECT * FROM Orders AS o
-						INNER JOIN Client AS c ON
-						c.id_client = o.id_client
-						WHERE user_login = ?";
-
-
-                        $params2 = array($nazwa_uzytkownika);
-                        $stmt2 = sqlsrv_query($conn, $sql2, $params2);
-                        if ($stmt2 === false) {
-                            die(print_r(sqlsrv_errors(), true));
-                        }
-
-                        while ($row = sqlsrv_fetch_array($stmt2, SQLSRV_FETCH_ASSOC)) {
-                            $orders[] = $row['id_order'];
-                        }
-
                         echo '<div class="col-sm-12"><h1>Twoje zamówienia:</h1></div>';
 
                         $ile = count($orders);
