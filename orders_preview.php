@@ -13,6 +13,16 @@
         <link href="css/main.css" rel="stylesheet">
         <link href="css/orders_preview.css" rel="stylesheet">
 
+	    <script type="text/javascript">
+			function submitForm(action)
+            {
+                document.getElementById('name_form').action = action;
+                document.getElementById('name_form').submit();
+            }
+        </script>
+		
+		
+		
     </head>
 
     <body>
@@ -32,20 +42,20 @@
 
                         $orders[] = 0;
 
-                        $nazwa_uzytkownika = $_SESSION['user'];
-						
+                        $user_name = $_SESSION['user'];
+						$id_client = '';
 						
 						$sth = $dbh->prepare("SELECT * FROM Orders o
 						INNER JOIN Client AS c
 						ON c.id_client = o.id_client
 						WHERE c.user_login = ?");
-						$sth->execute(array($nazwa_uzytkownika));
+						$sth->execute(array($user_name));
 						$results = $sth->fetchAll();
 							
 						foreach($results as $result) {
 							
 							$orders[] = $result['id_order'];
-							
+							$id_client = $result['id_client'];
 						}
 						
                         echo '<div class="col-sm-12"><h1>Twoje zamówienia:</h1></div>';
@@ -62,11 +72,17 @@
                                         <div>Zamowienie nr ' . $orders[$j] . '</div>
                                         <button name="id_orders" value="' . $orders[$j] . '" type="submit" class="btn btn-default big-button">Zobacz zamówienie</button>
                                     </div>
-                                </form>
+                                </form>				
                             </div>
                             
                             ';
                         }
+						
+						// przycisk do pobierania pdf'a zestawiającego wszystkie zamówienia klienta
+						echo '<center><form id="name_form" method="POST" action="generate_factures_to_pdf.php">
+							<button name="data_pdf" type="submit" class="btn btn-default big-button" value="0:'.$id_client.':all">Pobierz zestawienie wszystkich zamówień</button>
+							</form></center>';
+						
                     }
                     ?>
 

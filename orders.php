@@ -4,8 +4,8 @@ session_start();
 
 include('../db.php');
 
-if (isset($_SESSION['user']) && isset($_POST['id_client']) && isset($_POST['id_order']) && isset($_POST['id_product']) && isset($_POST['amount_product'])) {
-
+if (isset($_SESSION['user']) && isset($_POST['id_client']) && isset($_POST['id_order']) && isset($_POST['id_product']) && isset($_POST['amount_product'])) 
+{
 
     $name_product[] = 0;
     $price_product[] = 0;
@@ -85,7 +85,7 @@ if (isset($_SESSION['user']) && isset($_POST['id_client']) && isset($_POST['id_o
       GG 53081153
      */
 // ---------------------------------------------------------
-// ważne w chuj.. domyślna ścieżka imgów jest - tcpdf/examples/images/
+//domyślna ścieżka imgów jest - tcpdf/examples/images/
     $PDF_HEADER_LOGO = "kross-presto-2016.jpg";
     $PDF_HEADER_LOGO_WIDTH = "50";
     $PDF_HEADER_TITLE = "BD Projekt Sklep Rowerowy";
