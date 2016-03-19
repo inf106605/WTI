@@ -114,11 +114,13 @@
 
                             // dodanie nowego produktu do zamówienia 
 
-                            if ((isset($_POST['id_product'])) && ($czy_istnieje_juz_dodany_produkt == 'nie')) {
+                            if ((isset($_POST['id_product'])) && ($czy_istnieje_juz_dodany_produkt == 'nie')) 
+							{
 								
-							$statement = $dbh->prepare("INSERT INTO OrdersProducts(id_order,id_product) VALUES(?,?)");
-							if($statement->execute(array($ostatni_order, $id_produktu)));
-							else echo "Eror: INSERT INTO OrdersProducts ...";
+								$statement = $dbh->prepare("INSERT INTO OrdersProducts(id_order,id_product) VALUES(?,?)");
+								
+								if($statement->execute(array($ostatni_order, $id_produktu)));
+								else echo "Eror: INSERT INTO OrdersProducts ...";
 								
                             }
 							

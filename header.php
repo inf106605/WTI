@@ -2,7 +2,9 @@
 <?php
 session_start();
 ?>
-<?php include('../db.php'); ?>
+<?php include('../db.php'); 
+?>
+
 <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
     <div class="container">
         <!-- Brand and toggle get grouped for better mobile display -->
@@ -13,7 +15,7 @@ session_start();
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="index.php">BD Projekt</a>
+            <a class="navbar-brand" href="index.php">WTI Projekt</a>
         </div>
 
         <div id="navbar" class="navbar-collapse collapse">

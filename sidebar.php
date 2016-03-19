@@ -33,7 +33,7 @@
     <div class="list-group kontakt" style="line-height: 25px">
         <h3 class="list-group-item" style="background-color: #f5f5f5;">Kontakt</h3>
         <div class="list-group-item">
-            <b>BD Projekt Sklep Rowerowy</b><br>
+            <b>WTI Projekt Sklep Rowerowy</b><br>
             ul. Piotrowo 3<br>
             60-965 Poznań<br>
             <b>NIP:</b> 2271021334<br>

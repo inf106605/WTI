@@ -7,22 +7,36 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <title>Zamówienia - BD Projekt - Rowerowy sklep internetowy</title>
-
+        <title>Zamówienia - WTI Projekt - Rowerowy sklep internetowy</title>
+		<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+		<script src="//code.jquery.com/jquery-1.10.2.js"></script>
+		<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+		<link rel="stylesheet" href="/resources/demos/style.css">
         <link href="css/bootstrap.min.css" rel="stylesheet">
         <link href="css/main.css" rel="stylesheet">
         <link href="css/orders_preview.css" rel="stylesheet">
-
 	    <script type="text/javascript">
 			function submitForm(action)
             {
                 document.getElementById('name_form').action = action;
                 document.getElementById('name_form').submit();
             }
-        </script>
+   
+	</script>
+		
+	<script> 
+	$(function() {
+		$( "#datepicker1" ).datepicker( { dateFormat: 'yy-mm-dd' } );
+		
+		$( "#datepicker2" ).datepicker( { dateFormat: 'yy-mm-dd' } );
 		
 		
+		});
 		
+		
+    </script>
+	
+	
     </head>
 
     <body>
@@ -79,6 +93,15 @@
                         }
 						
 						// przycisk do pobierania pdf'a zestawiającego wszystkie zamówienia klienta
+
+							echo '<center><form id="name_form" method="POST" action="generate_factures_to_pdf.php">
+							<div id="date_picker">
+							<p>Data początkowa: <input type="text" id="datepicker1" name="begin_date" /></p>
+							<p>Data końcowa: <input type="text" id="datepicker2" name="end_date" /></p>
+							</div>
+							<button name="data_pdf" type="submit" class="btn btn-default big-button" value="0:'.$id_client.':datepicker">Pobierz zestawienie okresowe zamówień</button>
+							</form></center>';
+						
 						echo '<center><form id="name_form" method="POST" action="generate_factures_to_pdf.php">
 							<button name="data_pdf" type="submit" class="btn btn-default big-button" value="0:'.$id_client.':all">Pobierz zestawienie wszystkich zamówień</button>
 							</form></center>';

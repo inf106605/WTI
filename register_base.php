@@ -7,7 +7,7 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <title>BD Projekt - Rowerowy sklep internetowy</title>
+        <title>WTI Projekt - Rowerowy sklep internetowy</title>
 
     </head>
 
@@ -86,11 +86,9 @@
                 $id_klient = $result['id_client'];
             }
 
-
-			
-			$statement = $dbh->prepare("INSERT INTO Orders(id_client,is_accepted,is_paid,date_order,date_shipment,is_realized,date_realized_order)
-						VALUES(?,?,?,?,?,?,?)");
-			if($statement->execute(array($id_klient,0,0,date("Y-m-d H:i:s"),NULL,0,NULL)));
+			$statement = $dbh->prepare("INSERT INTO Orders(id_client,is_accepted,is_paid,date_order,time_order,date_shipment,is_realized,date_realized_order)
+						VALUES(?,?,?,NULL,?,?,?,?)");
+			if($statement->execute(array($id_klient,0,0,NULL,NULL,0,NULL)));
 			else 
 			{
 				print_r($statement->errorInfo());

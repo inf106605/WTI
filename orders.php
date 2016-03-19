@@ -78,13 +78,6 @@ if (isset($_SESSION['user']) && isset($_POST['id_client']) && isset($_POST['id_o
         $pdf->setLanguageArray($l);
     }
 
-    /*
-      AnDecor Producent Paneli Szklanych
-      email: wycena@andecor.pl
-      Tel. Kom. 535 170 289
-      GG 53081153
-     */
-// ---------------------------------------------------------
 //domyślna ścieżka imgów jest - tcpdf/examples/images/
     $PDF_HEADER_LOGO = "kross-presto-2016.jpg";
     $PDF_HEADER_LOGO_WIDTH = "50";
@@ -107,12 +100,7 @@ if (isset($_SESSION['user']) && isset($_POST['id_client']) && isset($_POST['id_o
 // set color for text
     $pdf->SetTextColor(0, 0, 0);
 
-//Write($h, $txt, $link='', $fill=0, $align='', $ln=false, $stretch=0, $firstline=false, $firstblock=false, $maxh=0)
-// write the text
-####### STWÓRZ JAKIŚ ZMIENNE, A NASTĘPNIE WRZUCAJ JE DO DOKUMENTU. CHODZI O TO, ZE ODDZIELNIE BEDZIE PIERWSZY WIESZ(KOLUMNY),
-####### POTEM ODDZIELNIE WIERSZE Z DANYMI
-####### ODDZIELNIE PODSUMOWANIE
-####### LOGO JUŻ JEST
+
 // ta data działała w poprzednik skrypcie
     $Naglowek = 'Zamówienie nr: ' . $_POST['id_order'];
     date("Y-m-d   H:i:s") . '</p></div>';
@@ -214,7 +202,7 @@ if (isset($_SESSION['user']) && isset($_POST['id_client']) && isset($_POST['id_o
     $pdf->writeHTML($style.$data, true, false, true, false, '');
     $pdf->writeHTML($style.$table.$dane.$podsumowanie.'</table>'.$dodatki, true, false, true, false, '');
 
-    $hash = 'BD_Sklep_zamówienie_' . md5($_SERVER['REMOTE_ADDR']) . '.pdf';
+    $hash = 'WTI_Sklep_zamówienie_' . md5($_SERVER['REMOTE_ADDR']) . '.pdf';
 // pdf
     ob_start();
     $pdf->Output($hash, 'D');
@@ -226,20 +214,26 @@ if (isset($_SESSION['user']) && isset($_POST['id_client']) && isset($_POST['id_o
 	if($statement->execute(array($id_order)));
 	else echo "Eror: UPDATE Orders SET is_accepted ...";
 
-
-	$actual_date_time = date("Y-m-d H:i:s");
+    // Eror: UPDATE Orders SET date_order ...
 	
-	$statement = $dbh->prepare("UPDATE Orders SET date_order = $actual_date_time WHERE id_order = ?");
+	$actual_time_order = gmdate("H:i:s", time());
+
+	$statement = $dbh->prepare("UPDATE Orders SET date_order = NOW() WHERE id_order = ?");
 	if($statement->execute(array($id_order)));
 	else echo "Eror: UPDATE Orders SET date_order ...";
-
+	
+	$statement = $dbh->prepare("UPDATE Orders SET time_order = ? WHERE id_order = ?");
+	if($statement->execute(array($actual_time_order,$id_order)));
+	else echo "Eror: UPDATE Orders SET time_order ...";
+	 
 	// uwtorzenie pustego koszyka
 
-	$statement = $dbh->prepare("INSERT INTO Orders(id_client,is_accepted,is_paid,date_order,date_shipment,is_realized,date_realized_order) VALUES(?,0,0,?,NULL,0,NULL)");
-	if($statement->execute(array($id_client, $actual_date_time)));
+	$statement = $dbh->prepare("INSERT INTO Orders(id_client,is_accepted,is_paid,date_order,date_shipment,is_realized,date_realized_order,time_order) VALUES(?,0,0,'','',0,'','')");
+	if($statement->execute(array($id_client)));
 	else echo "Eror: INSERT INTO Orders ...";
 	
     echo "<script>setTimeout('window.history.back()', 10);</script>";
 }
+
 ?>
 
