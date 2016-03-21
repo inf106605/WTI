@@ -46,6 +46,12 @@
 
 			try{
 			
+			
+			// zamiana hasła na md5 
+			
+			$md5_pass = md5($password);
+			
+			
 			$statement = $dbh->prepare("INSERT INTO Addresses (city,province,country,postal_code,street,number_house,number_local) VALUES (?,?,?,?,?,?,?)");
 			if($statement->execute(array($city, $province, $country, $postal_code, $street, $number_house, $number_local)));
 			else echo "Eror: INSERT INTO Addresses ...";
@@ -64,9 +70,8 @@
             //echo "1 record Contact added";
             $last_id_contact = $dbh->lastInsertId();
 			
-
 			$statement1 = $dbh->prepare("INSERT INTO Client (id_adress,id_contact,user_login,md5_pass,name,nip,client_type,data_rejestracji,privileges,surname) VALUES (?,?,?,?,?,?,?,?,?,?)");
-			if($statement1->execute(array($last_id_adres,$last_id_contact,$userName,$password,$name,$nip,"standard",date("Y-m-d H:i:s"),1,$surname)));
+			if($statement1->execute(array($last_id_adres,$last_id_contact,$userName,$md5_pass,$name,$nip,"standard",date("Y-m-d H:i:s"),1,$surname)));
 			else
 			{
 				echo "Eror: INSERT INTO Client ...";

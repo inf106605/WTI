@@ -37,7 +37,7 @@
             ul. Piotrowo 3<br>
             60-965 Poznań<br>
             <b>NIP:</b> 2271021334<br>
-            <b>email:</b> testingbaza@gmail.com<br>
+            <b>email:</b> wtiprojekt@wp.pl<br>
             <b>telefon:</b> 492 182 932<br>
             <b>GG:</b> 91238219
         </div>

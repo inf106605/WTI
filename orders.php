@@ -3,6 +3,7 @@
 session_start();
 
 include('../db.php');
+require 'phpmailer/PHPMailerAutoload.php';
 
 if (isset($_SESSION['user']) && isset($_POST['id_client']) && isset($_POST['id_order']) && isset($_POST['id_product']) && isset($_POST['amount_product'])) 
 {
@@ -194,21 +195,73 @@ if (isset($_SESSION['user']) && isset($_POST['id_client']) && isset($_POST['id_o
 		 WHERE id_client = ?");
 	$sth->execute(array($id_client));
 	$results = $sth->fetchAll();
-							
+
+	$name_client = '';
+	
 	foreach($results as $result) {
-    
+		$name_client = $result['surname'].' '.$result['name'];
         $dodatki = '<br /><br /><br />Dane klienta do faktury:<br /><br />Imie: ' . $result['surname'] . '<br />Nazwisko: ' . $result['name'] . '<br />Adres wysyłki: <br />Ulica: ' . $result['street'] . ' ' . $result['number_house'] . '<br />Kod pocztowy: ' . $result['postal_code'] . '<br />Miejscowość: ' . $result['city'] . '<br />Województwo: ' . $result['province'] . '<br />Kraj: ' . $result['country'] . '<br />';
     }
     $pdf->writeHTML($style.$data, true, false, true, false, '');
     $pdf->writeHTML($style.$table.$dane.$podsumowanie.'</table>'.$dodatki, true, false, true, false, '');
 
-    $hash = 'WTI_Sklep_zamówienie_' . md5($_SERVER['REMOTE_ADDR']) . '.pdf';
-// pdf
+    $hash = 'WTI_Sklep_zamowienie_nr_' .$id_order.'_'. date("Y-m-d_H-i-s") . '.pdf';
+	// pdf
+	$filename= $hash.".pdf"; 
+    $filelocation = "C:\\xampp2\\htdocs\\sklep\\temp_pdf";//windows
+	$fileNL = $filelocation."\\".$filename;//Windows
+		 
     ob_start();
-    $pdf->Output($hash, 'D');
+    //$pdf->Output($hash, 'D');
+	//$pdf->Output("$tmp/file.pdf", "F");
+	$pdf->Output($fileNL,'F');
 	ob_end_flush();
+	
+	
+	//wysyłanie pdf'a na e-maila
+	
+	$mail = new PHPMailer();
+	$mail->IsSMTP();
+	//$mail->SMTPDebug = 2; 
+	$mail->Mailer = 'smtp';
+	$mail->SMTPAuth = true;
+	$mail->Host = 'smtp.wp.pl'; // "ssl://smtp.gmail.com" didn't worked
+	$mail->Port = 465;
+	$mail->SMTPSecure = 'ssl';
 
-// ustawienie jako zrealizowanych !!!!! is_accepted oraz data_order są dodawane jako odróżnienie koszyka od zamówienia
+	$myfile = fopen("..\dane_email.txt", "r") or die("Unable to open file!");
+	// Output one line until end-of-file
+	$data_email = explode(':',fgets($myfile));
+	fclose($myfile);
+ 
+	$mail->Username = $data_email[0];
+	$mail->Password = $data_email[1];
+ 
+	$mail->IsHTML(true); // if you are going to send HTML formatted emails
+	$mail->SingleTo = true; // if you want to send a same email to multiple users. multiple emails will be sent one-by-one.
+ 
+	$mail->From = "wtiprojekt@wp.pl";
+	$mail->FromName = "Maciej Danielak";
+	$mail->addAddress("wtiprojekt@wp.pl","Krzysztof Jerzyński");
+	$mail->Subject = "Zamówienie nr ".$id_order;
+	foreach($results as $result) {
+		$mail->Body = '<br /><br /><br />Dane klienta do faktury:<br /><br />Imie: ' . $result['surname'] . '<br />Nazwisko: ' . $result['name'] . '<br />Adres wysyłki: <br />Ulica: ' . $result['street'] . ' ' . $result['number_house'] . '<br />Kod pocztowy: ' . $result['postal_code'] . '<br />Miejscowość: ' . $result['city'] . '<br />Województwo: ' . $result['province'] . '<br />Kraj: ' . $result['country'] . '<br />';
+	}
+	$mail->AddAttachment($fileNL, $filename);
+ 
+	if(!$mail->Send())
+		echo "Błąd składania zamówienia! <br />PHPMailer Error: " . $mail->ErrorInfo;
+	else{
+		echo "Dziękujemy za złożenie zamówienia...";
+	}
+	
+	$files = glob('temp_pdf/*'); // get all file names
+	foreach($files as $file){ // iterate files
+	if(is_file($file))
+		unlink($file); // delete file
+	}
+
+	// ustawienie jako zrealizowanych !!!!! is_accepted oraz data_order są dodawane jako odróżnienie koszyka od zamówienia
 
 	$statement = $dbh->prepare("UPDATE Orders SET is_accepted = 1 WHERE id_order = ?");
 	if($statement->execute(array($id_order)));
@@ -232,7 +285,7 @@ if (isset($_SESSION['user']) && isset($_POST['id_client']) && isset($_POST['id_o
 	if($statement->execute(array($id_client)));
 	else echo "Eror: INSERT INTO Orders ...";
 	
-    echo "<script>setTimeout('window.history.back()', 10);</script>";
+    echo '<script>setTimeout(function(){location.href="orders_preview.php", 1000} );</script>';
 }
 
 ?>
