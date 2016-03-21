@@ -28,38 +28,35 @@
             $login = $_POST['user']; //odczytuje login z formularza
             $pass = $_POST['pass'];
 
-// szukanie użytkownika , czy istnieje 
+			// szukanie użytkownika , czy istnieje 
 
 
             if ((isset($_POST['user'])) && (isset($_POST['pass']))) {
 
-			
-			
-			
-			                $sth = $dbh->prepare("SELECT * FROM Client WHERE user_login = ? AND md5_pass = ?");
-                            $sth->execute(array($login,$pass));
-							$results = $sth->fetchAll();
+				$md5_pass = md5($_POST['pass']);
+						
+			    $sth = $dbh->prepare("SELECT * FROM Client WHERE user_login = ? AND md5_pass = ?");
+                $sth->execute(array($login,$md5_pass));
+				$results = $sth->fetchAll();
 							
-                       
-                    foreach($results as $result) {
+                foreach($results as $result) {
 
-               
-                        if (($login == $result['user_login']) && ($pass == $result['md5_pass'])) {
-                            $_SESSION['user'] = $login;
-                            $_SESSION['pass'] = $pass;
-
-                            echo 'Zostałeś pomyślnie zalogowany.';
-                            echo '<script>setTimeout("window.location.href=\"index.php\";", 2000);</script>';
-                            return;
-                        }
-                    
-					}
+                if (($login == $result['user_login']) && ($md5_pass == $result['md5_pass'])) {
 					
-                    echo 'Podano nieprawidłowe dane! Spróbuj jeszcze raz!';
-                    echo "<script>setTimeout('window.history.back()', 2000);</script>";
-                    return;
-                }
-             else if (!isset($_POST['user'])) {
+						$_SESSION['user'] = $login;
+						echo 'Zostałeś pomyślnie zalogowany.';
+						echo '<script>setTimeout("window.location.href=\"index.php\";", 2000);</script>';
+						return;
+					}
+                    
+				}
+					
+                echo 'Podano nieprawidłowe dane! Spróbuj jeszcze raz!';
+                echo "<script>setTimeout('window.history.back()', 2000);</script>";
+                return;
+			}
+            
+			else if (!isset($_POST['user'])) {
                 echo 'Podaj login!';
             } else if (!isset($_POST['pass'])) {
                 echo 'Podaj hasło!';

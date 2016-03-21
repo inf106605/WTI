@@ -198,14 +198,14 @@ if (isset($_SESSION['user']) && isset($_POST['id_client']) && isset($_POST['id_o
 
 	$name_client = '';
 	
-	foreach($results as $result) {
+	foreach($results as $result){
 		$name_client = $result['surname'].' '.$result['name'];
         $dodatki = '<br /><br /><br />Dane klienta do faktury:<br /><br />Imie: ' . $result['surname'] . '<br />Nazwisko: ' . $result['name'] . '<br />Adres wysyłki: <br />Ulica: ' . $result['street'] . ' ' . $result['number_house'] . '<br />Kod pocztowy: ' . $result['postal_code'] . '<br />Miejscowość: ' . $result['city'] . '<br />Województwo: ' . $result['province'] . '<br />Kraj: ' . $result['country'] . '<br />';
     }
     $pdf->writeHTML($style.$data, true, false, true, false, '');
     $pdf->writeHTML($style.$table.$dane.$podsumowanie.'</table>'.$dodatki, true, false, true, false, '');
 
-    $hash = 'WTI_Sklep_zamowienie_nr_' .$id_order.'_'. date("Y-m-d_H-i-s") . '.pdf';
+    $hash = 'WTI_Sklep_zamówienie_nr_' .$id_order.'_'. date("Y-m-d_H-i-s") . '.pdf';
 	// pdf
 	$filename= $hash.".pdf"; 
     $filelocation = "C:\\xampp2\\htdocs\\sklep\\temp_pdf";//windows
@@ -219,7 +219,6 @@ if (isset($_SESSION['user']) && isset($_POST['id_client']) && isset($_POST['id_o
 	
 	
 	//wysyłanie pdf'a na e-maila
-	
 	$mail = new PHPMailer();
 	$mail->IsSMTP();
 	//$mail->SMTPDebug = 2; 
@@ -239,10 +238,11 @@ if (isset($_SESSION['user']) && isset($_POST['id_client']) && isset($_POST['id_o
  
 	$mail->IsHTML(true); // if you are going to send HTML formatted emails
 	$mail->SingleTo = true; // if you want to send a same email to multiple users. multiple emails will be sent one-by-one.
+	$mail->CharSet = "UTF-8";
  
 	$mail->From = "wtiprojekt@wp.pl";
-	$mail->FromName = "Maciej Danielak";
-	$mail->addAddress("wtiprojekt@wp.pl","Krzysztof Jerzyński");
+	$mail->FromName = $name_client;
+	$mail->addAddress("wtiprojekt@wp.pl",$name_client);
 	$mail->Subject = "Zamówienie nr ".$id_order;
 	foreach($results as $result) {
 		$mail->Body = '<br /><br /><br />Dane klienta do faktury:<br /><br />Imie: ' . $result['surname'] . '<br />Nazwisko: ' . $result['name'] . '<br />Adres wysyłki: <br />Ulica: ' . $result['street'] . ' ' . $result['number_house'] . '<br />Kod pocztowy: ' . $result['postal_code'] . '<br />Miejscowość: ' . $result['city'] . '<br />Województwo: ' . $result['province'] . '<br />Kraj: ' . $result['country'] . '<br />';
