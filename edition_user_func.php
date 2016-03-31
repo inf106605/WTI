@@ -6,7 +6,7 @@ include '../db.php';
 
 if (isset($_SESSION['user'])) {
 
-	var_dump($_POST);
+	//var_dump($_POST);
 
 	$id_client = 0;
 	$id_contact = 0;
@@ -193,6 +193,6 @@ if (isset($_SESSION['user'])) {
 	
 }
 
-echo "<script>setTimeout('window.history.back()', 10);</script>";
+echo '<script>setTimeout(function(){location.href="edition_user.php", 1000} );</script>';
 
 ?>

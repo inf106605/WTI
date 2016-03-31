@@ -1,0 +1,8 @@
+<?php
+
+preg_match_all("/<a class=\"load_word\"[\W|\w]*\/\">([\W|\w]*)<\/a>/sU", $input_lines, $output_array);
+
+echo $output_array[1][0]; 
+
+
+?>
