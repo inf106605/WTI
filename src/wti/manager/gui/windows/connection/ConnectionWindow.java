@@ -85,12 +85,16 @@ public class ConnectionWindow {
 	}
 
 	private void createPasswordControls(Composite parent) {
-		textPassword = createControlPair(parent, "Has\u0142o");
+		textPassword = createControlPair(parent, "Has\u0142o", SWT.BORDER | SWT.PASSWORD);
 	}
 
 	private Text createControlPair(Composite parent, String label) {
+		return createControlPair(parent, label, SWT.BORDER);
+	}
+
+	private Text createControlPair(Composite parent, String label, int textStyle) {
 		createLabel(parent, label);
-		return createText(parent);
+		return createText(parent, textStyle);
 	}
 
 	private void createLabel(Composite parent, String text) {
@@ -99,8 +103,8 @@ public class ConnectionWindow {
 		label.setText(text);
 	}
 
-	private Text createText(Composite parent) {
-		Text text = new Text(parent, SWT.BORDER);
+	private Text createText(Composite parent, int style) {
+		Text text = new Text(parent, style);
 		text.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, true, 1, 1));
 		return text;
 	}
