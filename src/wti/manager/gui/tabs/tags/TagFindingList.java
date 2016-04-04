@@ -1,22 +1,24 @@
 package wti.manager.gui.tabs.tags;
 
-import java.util.LinkedList;
 import java.util.List;
 
 import org.eclipse.swt.widgets.Composite;
 
+import wti.manager.database.tables.Tag;
 import wti.manager.gui.widgets.findinglist.FindingList;
+import wti.manager.utils.DatabaseException;
+import wti.manager.utils.Utils;
 
-public class TagFindingList extends FindingList<Object> {
+public class TagFindingList extends FindingList<Tag> {
 
 	public TagFindingList(Composite parent, int style) {
 		super(parent, style);
-		List<Object> aaa = new LinkedList<Object>();
-		aaa.add("peda³");
-		aaa.add("kierownica");
-		aaa.add("smar");
-		aaa.add("szprycha");
-		setInput(aaa);
+		try {
+			List<Tag> tags = Utils.getInSession(Tag::getAll);
+			setInput(tags);
+		} catch (DatabaseException e) {
+			//TODO
+		}
 	}
 
 	@Override
@@ -25,8 +27,8 @@ public class TagFindingList extends FindingList<Object> {
 	}
 
 	@Override
-	protected String getName(Object object) {
-		return object.toString();
+	protected String getName(Tag tag) {
+		return tag.getName();
 	}
 
 }

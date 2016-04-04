@@ -127,7 +127,7 @@ public class ConnectionWindow {
 		} catch (RuntimeException e) {
 			MessageBox messageBox = new MessageBox(shell, SWT.ICON_ERROR);
 			messageBox.setText("B³¹d po³¹czenia");
-			messageBox.setMessage("Nie mo¿na po³¹czy z baz¹ danych.\n\nTreœæ wyj¹tku:\n"+e.getMessage());
+			messageBox.setMessage("Nie mo¿na po³¹czyæ z baz¹ danych.\n\nTreœæ wyj¹tku:\n"+e.getMessage());
 			messageBox.open();
 			btnConnect.setText("Po³¹cz");
 			btnConnect.setEnabled(true);
