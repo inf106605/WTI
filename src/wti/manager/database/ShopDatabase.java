@@ -5,6 +5,7 @@ import java.net.URL;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 
+import wti.manager.database.tables.Product;
 import wti.manager.database.tables.Tag;
 
 public class ShopDatabase {
@@ -24,6 +25,7 @@ public class ShopDatabase {
 	public static Configuration createConfiguration() {
 		Configuration configuration = new Configuration().configure(configurationFile);
 		configuration.addAnnotatedClass(Tag.class);
+		configuration.addAnnotatedClass(Product.class);
 		return configuration;
 	}
 	

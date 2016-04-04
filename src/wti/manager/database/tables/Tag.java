@@ -33,10 +33,6 @@ public class Tag {
 		return id;
 	}
 
-	public void setId(int id) {
-		this.id = id;
-	}
-
 	public String getName() {
 		return name;
 	}
@@ -50,6 +46,11 @@ public class Tag {
 		@SuppressWarnings("unchecked")
 		List<Tag> tags = criteria.list();
 		return tags;
+	}
+	
+	@Override
+	public String toString() {
+		return "Tag(\""+name+"\")";
 	}
 	
 }
