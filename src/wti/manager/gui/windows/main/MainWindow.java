@@ -9,6 +9,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
 
+import wti.manager.gui.tabs.products.ProductsComposite;
 import wti.manager.gui.tabs.tags.TagsComposite;
 
 public class MainWindow {
@@ -50,6 +51,7 @@ public class MainWindow {
 
 	private void createTabs(TabFolder tabFolder) {
 		createTabTags(tabFolder);
+		createTabProducts(tabFolder);
 	}
 
 	private void createTabTags(TabFolder tabFolder) {
@@ -57,6 +59,13 @@ public class MainWindow {
 		tbtmTags.setText("Tagi");
 		TagsComposite tagsComposite = new TagsComposite(tabFolder, SWT.NONE);
 		tbtmTags.setControl(tagsComposite);
+	}
+
+	private void createTabProducts(TabFolder tabFolder) {
+		TabItem tbtmProducts = new TabItem(tabFolder, SWT.NONE);
+		tbtmProducts.setText("Produkty");
+		ProductsComposite productsComposite = new ProductsComposite(tabFolder, SWT.NONE);
+		tbtmProducts.setControl(productsComposite);
 	}
 
 	private void openShell(Shell shell) {
