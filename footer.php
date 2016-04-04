@@ -19,3 +19,10 @@
   <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
   <link rel="stylesheet" href="/resources/demos/style.css">
 <script src="js/bootstrap.min.js"></script>
+        <script type="text/javascript">
+            function submitFormSearch(action)
+            {
+                document.getElementById('my_search_form').action = action;
+                document.getElementById('my_search_form').submit();
+            }
+        </script>

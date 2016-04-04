@@ -19,11 +19,12 @@ session_start();
         </div>
 
         <div id="navbar" class="navbar-collapse collapse">
-            <form class="navbar-form navbar-left" method="POST" action="search.php">
+            <form class="navbar-form navbar-left" id="my_search_form" method="POST" action="test.php">
                 <div class="form-group">
                     <input type="text" class="form-control" name="pole_szukaj" placeholder="Szukaj">
                 </div>
-                <button type="submit" class="btn btn-default">Szukaj</button>
+                <button type="submit" class="btn btn-default" onclick="submitFormSearch('search.php')">Szukaj</button>
+				<button type="submit" class="btn btn-default" onclick="submitFormSearch('advanced_search.php')">Wyszukiwanie zaawansowane</button>
             </form>
             <ul class="nav navbar-nav navbar-right">
 				<?php
