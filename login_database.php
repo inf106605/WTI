@@ -42,7 +42,14 @@
                 foreach($results as $result) {
 
                 if (($login == $result['user_login']) && ($md5_pass == $result['md5_pass'])) {
-					
+	
+						$statement1 = $dbh->prepare("UPDATE Client SET date_last_logged = NOW() WHERE user_login = ?");
+						if($statement1->execute(array($login)));
+						else
+						{
+							echo "Error: UPDATE Client SET date_last_logged...";
+						}
+										
 						$_SESSION['user'] = $login;
 						echo 'Zostałeś pomyślnie zalogowany.';
 						echo '<script>setTimeout("window.location.href=\"index.php\";", 2000);</script>';
