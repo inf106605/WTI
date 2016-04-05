@@ -80,21 +80,6 @@ public abstract class FindingList<T extends IHasId> extends Composite {
 		reselectItem();
 	}
 
-	public void reselectItem() {
-		list.deselectAll();
-		if (lastSelectedId == -1)
-			return;
-		int i = 0;
-		for (T item : input) {
-			if (item.getId() == lastSelectedId) {
-				list.setSelection(i);
-				return;
-			}
-			++i;
-		}
-		lastSelectedId = -1;
-	}
-
 	public java.util.List<T> getInput() {
 		return input;
 	}
@@ -126,11 +111,36 @@ public abstract class FindingList<T extends IHasId> extends Composite {
 	public void removeSelectionListener(UndoableSelectionListener listener) {
 		undoableSelectionListeners.remove(listener);
 	}
+
+	public void selectId(int id) {
+		lastSelectedId = id;
+		reselectItem();
+	}
+	
+	public void deselectAll() {
+		lastSelectedId = -1;
+		reselectItem();
+	}
 	
 	public T getSelectedItem() {
 		int selectionIndex = list.getSelectionIndex();
 		T selectedItem = input.get(selectionIndex);
 		return selectedItem;
+	}
+
+	protected void reselectItem() {
+		list.deselectAll();
+		if (lastSelectedId == -1)
+			return;
+		int i = 0;
+		for (T item : input) {
+			if (item.getId() == lastSelectedId) {
+				list.setSelection(i);
+				return;
+			}
+			++i;
+		}
+		lastSelectedId = -1;
 	}
 
 	@Override

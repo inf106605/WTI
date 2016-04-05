@@ -53,13 +53,23 @@ public class TagsComposite extends Composite {
 	private void createCompositeEditTag() {
 		tagPropertiesComposite = new TagPropertiesComposite(this, SWT.NONE);
 		tagPropertiesComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		tagPropertiesComposite.addNewListener(this::onNewTag);
 		tagPropertiesComposite.addSaveListener(this::onSaveChanges);
 	}
 	
-	private void onSaveChanges(Tag newTag) {
+	private void onNewTag() {
+		tagFindingList.deselectAll();
+	}
+	
+	private void onSaveChanges(boolean isNew, Tag newTag) {
 		try {
-			SessionUtils.runInSession((session) -> session.update(newTag));
+			if (isNew)
+				SessionUtils.runInSession((session) -> session.save(newTag));
+			else
+				SessionUtils.runInSession((session) -> session.update(newTag));
 			tagFindingList.refresh();
+			if (isNew)
+				tagFindingList.selectId(newTag.getId());
 			tagPropertiesComposite.setData(newTag);
 		} catch (DatabaseException e) {
 			ErrorMessages.showSaveError(getShell(), "tagu", e);

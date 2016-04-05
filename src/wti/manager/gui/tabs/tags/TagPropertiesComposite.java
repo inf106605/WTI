@@ -16,7 +16,7 @@ public class TagPropertiesComposite extends PropertiesComposite<Tag> {
 
 	
 	public TagPropertiesComposite(Composite parent, int style) {
-		super(parent, style);
+		super(parent, style, new Tag());
 	}
 
 	@Override

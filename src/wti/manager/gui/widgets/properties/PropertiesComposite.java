@@ -17,20 +17,29 @@ import wti.manager.utils.ICloneable;
 public abstract class PropertiesComposite<T extends ICloneable<T>> extends Composite {
 
 	public static interface ISaveListener<T> {
-		public void onSaveChanges(T newData);
+		public void onSaveChanges(boolean isNew, T newData);
+	}
+	
+	public static interface INewListener {
+		public void onNew();
 	}
 	
 	
+	private T emptyData;
 	private T oryginalData;
 	protected T data;
+	private boolean isNew = false;
 	private List<ISaveListener<T>> saveListeners = new LinkedList<ISaveListener<T>>();
+	private List<INewListener> newListeners = new LinkedList<INewListener>();
 
+	private Button btnNew;
 	private Button btnSave;
 	private Button btnUndo;
 	
 	
-	public PropertiesComposite(Composite parent, int style) {
+	public PropertiesComposite(Composite parent, int style, T emptyData) {
 		super(parent, style);
+		this.emptyData = emptyData;
 		setLayout();
 		createControls();
 		configureComposites();
@@ -52,18 +61,39 @@ public abstract class PropertiesComposite<T extends ICloneable<T>> extends Compo
 
 	private void createCompositeButtons() {
 		Composite compositeButtons = createCompositeButtonsItself();
+		createButtonNew(compositeButtons);
 		createButtonSave(compositeButtons);
 		createButtonUndo(compositeButtons);
 	}
 
 	private Composite createCompositeButtonsItself() {
 		Composite compositeButtons = new Composite(this, SWT.NONE);
-		GridLayout gl_compositeButtons = new GridLayout(2, true);
+		GridLayout gl_compositeButtons = new GridLayout(3, true);
 		gl_compositeButtons.marginWidth = 0;
 		gl_compositeButtons.marginHeight = 0;
 		compositeButtons.setLayout(gl_compositeButtons);
 		compositeButtons.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, true, false, 1, 1));
 		return compositeButtons;
+	}
+
+	private void createButtonNew(Composite compositeButtons) {
+		btnNew = new Button(compositeButtons, SWT.NONE);
+		btnNew.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
+		btnNew.setText("Nowy");
+		btnNew.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent event) {
+				createNewData();
+			}
+		});
+	}
+
+	public void createNewData() {
+		if (!setData(emptyData))
+			return;
+		isNew = true;
+		for (INewListener listener : newListeners)
+			listener.onNew();
 	}
 
 	private void createButtonSave(Composite compositeButtons) {
@@ -81,8 +111,9 @@ public abstract class PropertiesComposite<T extends ICloneable<T>> extends Compo
 	private void saveChanges() {
 		oryginalData = data;
 		for (ISaveListener<T> listener : saveListeners)
-			listener.onSaveChanges(data);
-		setUnchanged();
+			listener.onSaveChanges(isNew, data);
+		if (!newDataIsSaved())
+			setUnchanged();
 	}
 
 	private void createButtonUndo(Composite compositeButtons) {
@@ -98,7 +129,10 @@ public abstract class PropertiesComposite<T extends ICloneable<T>> extends Compo
 	}
 	
 	private void undoChanges() {
-		setDataForReal(oryginalData);
+		if (isNew)
+			setDataForReal(null);
+		else
+			setDataForReal(oryginalData);
 	}
 	
 	private void configureComposites() {
@@ -114,14 +148,31 @@ public abstract class PropertiesComposite<T extends ICloneable<T>> extends Compo
 		saveListeners.remove(listener);
 	}
 	
+	public void addNewListener(INewListener listener) {
+		newListeners.add(listener);
+	}
+	
+	public void removeNewListener(INewListener listener) {
+		newListeners.remove(listener);
+	}
+	
 	public boolean setData(T data) {
-		if (oryginalData == null ? data == null : oryginalData.equals(data))
+		boolean newDataIsTheSameAsOld = oryginalData == null ? data == null : oryginalData.equals(data);
+		if (newDataIsTheSameAsOld && newDataIsSaved())
 			return true;
-		if (oryginalData != null && !this.data.equals(oryginalData))
+		if (areUnsavedChanges())
 			if (!askDiscardChanges())
 				return false;
 		oryginalData = data;
 		return setDataForReal(data);
+	}
+
+	public boolean newDataIsSaved() {
+		return oryginalData != data;
+	}
+
+	public boolean areUnsavedChanges() {
+		return oryginalData != null && !this.data.equals(oryginalData);
 	}
 
 	private boolean setDataForReal(T data) {
@@ -135,6 +186,7 @@ public abstract class PropertiesComposite<T extends ICloneable<T>> extends Compo
 			setEditable(true);
 		}
 		setUnchanged();
+		isNew = false;
 		return true;
 	}
 	

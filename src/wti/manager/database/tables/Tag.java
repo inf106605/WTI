@@ -20,13 +20,13 @@ public class Tag implements IHasId, ICloneable<Tag> {
 
 	@Id
 	@Column(name = "id_tag")
-	private int id;
+	private int id = 0;
 	
 	@Column(name = "name_tag", nullable = false)
-	private String name;
+	private String name = "";
 
 	
-	Tag() {
+	public Tag() {
 	}
 	
 	public Tag(String name) {
