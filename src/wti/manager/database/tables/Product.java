@@ -10,9 +10,11 @@ import javax.persistence.Table;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 
+import wti.manager.utils.IHasId;
+
 @Entity
 @Table(name = "products")
-public class Product {
+public class Product implements IHasId {
 
 	@Id
 	@Column(name = "id_product")
@@ -61,7 +63,7 @@ public class Product {
 	
 	@Override
 	public String toString() {
-		return "Product(\""+name+"\")";
+		return "Product["+id+"](\""+name+"\")";
 	}
 	
 }

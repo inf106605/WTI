@@ -7,17 +7,23 @@ import org.eclipse.swt.widgets.Composite;
 import wti.manager.database.tables.Tag;
 import wti.manager.gui.widgets.findinglist.FindingList;
 import wti.manager.utils.DatabaseException;
-import wti.manager.utils.Utils;
+import wti.manager.utils.ErrorMessages;
+import wti.manager.utils.SessionUtils;
 
 public class TagFindingList extends FindingList<Tag> {
 
 	public TagFindingList(Composite parent, int style) {
 		super(parent, style);
+		refresh();
+	}
+
+	public void refresh() {
 		try {
-			List<Tag> tags = Utils.getInSession(Tag::getAll);
+			List<Tag> tags = SessionUtils.getInSession(Tag::getAll);
 			setInput(tags);
+			reselectItem();
 		} catch (DatabaseException e) {
-			//TODO
+			ErrorMessages.showListLoadError(getShell(), "tagów", e);
 		}
 	}
 

@@ -10,9 +10,13 @@ import javax.persistence.Table;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 
+import wti.manager.utils.ICloneable;
+import wti.manager.utils.IHasId;
+import wti.manager.utils.Utils;
+
 @Entity
 @Table(name = "tag")
-public class Tag {
+public class Tag implements IHasId, ICloneable<Tag> {
 
 	@Id
 	@Column(name = "id_tag")
@@ -50,7 +54,34 @@ public class Tag {
 	
 	@Override
 	public String toString() {
-		return "Tag(\""+name+"\")";
+		return "Tag["+id+"](\""+name+"\")";
+	}
+	
+	public Tag clone() {
+		Tag tag = new Tag();
+		tag.id = id;
+		tag.name = name;
+		return tag;
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == this)
+			return true;
+		if (!(obj instanceof Tag))
+			return false;
+		Tag tag = (Tag) obj;
+		
+		boolean idOk = tag.id == id;
+		boolean nameOk = tag.name.equals(name);
+		return Utils.equalsFromBools(idOk, nameOk);
+	}
+	
+	@Override
+	public int hashCode() {
+		int idHash = id;
+		int nameHash = name.hashCode();
+		return Utils.hashFromInts(idHash, nameHash);
 	}
 	
 }

@@ -1,14 +1,20 @@
 package wti.manager.gui.tabs.tags;
 
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Label;
+
+import wti.manager.database.tables.Tag;
+import wti.manager.utils.DatabaseException;
+import wti.manager.utils.ErrorMessages;
+import wti.manager.utils.SessionUtils;
 
 public class TagsComposite extends Composite {
 
-	private TagFindingList compositeTagList;
+	private TagFindingList tagFindingList;
+	private TagPropertiesComposite tagPropertiesComposite;
 	
 	
 	public TagsComposite(Composite parent, int style) {
@@ -28,8 +34,15 @@ public class TagsComposite extends Composite {
 	}
 
 	private void createCompositeTagList() {
-		compositeTagList = new TagFindingList(this, SWT.NONE);
-		compositeTagList.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		tagFindingList = new TagFindingList(this, SWT.NONE);
+		tagFindingList.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		tagFindingList.addSelectionListener((event) -> onTagSelection());
+	}
+
+	private boolean onTagSelection() {
+		Tag tag = tagFindingList.getSelectedItem();
+		boolean result = tagPropertiesComposite.setData(tag);
+		return result;
 	}
 
 	private void createSeparator() {
@@ -38,8 +51,19 @@ public class TagsComposite extends Composite {
 	}
 
 	private void createCompositeEditTag() {
-		Composite compositeEditTag = new Composite(this, SWT.NONE);
-		compositeEditTag.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		tagPropertiesComposite = new TagPropertiesComposite(this, SWT.NONE);
+		tagPropertiesComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		tagPropertiesComposite.addSaveListener(this::onSaveChanges);
+	}
+	
+	private void onSaveChanges(Tag newTag) {
+		try {
+			SessionUtils.runInSession((session) -> session.update(newTag));
+			tagFindingList.refresh();
+			tagPropertiesComposite.setData(newTag);
+		} catch (DatabaseException e) {
+			ErrorMessages.showSaveError(getShell(), "tagu", e);
+		}
 	}
 
 	@Override

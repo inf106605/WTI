@@ -7,17 +7,18 @@ import org.eclipse.swt.widgets.Composite;
 import wti.manager.database.tables.Product;
 import wti.manager.gui.widgets.findinglist.FindingList;
 import wti.manager.utils.DatabaseException;
-import wti.manager.utils.Utils;
+import wti.manager.utils.ErrorMessages;
+import wti.manager.utils.SessionUtils;
 
 public class ProductFindingList extends FindingList<Product> {
 
 	public ProductFindingList(Composite parent, int style) {
 		super(parent, style);
 		try {
-			List<Product> products = Utils.getInSession(Product::getAll);
+			List<Product> products = SessionUtils.getInSession(Product::getAll);
 			setInput(products);
 		} catch (DatabaseException e) {
-			//TODO
+			ErrorMessages.showListLoadError(getShell(), "produktów", e);
 		}
 	}
 
