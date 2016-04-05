@@ -14,6 +14,8 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 import wti.manager.database.ShopDatabase;
+import wti.manager.gui.images.Images;
+import wti.manager.gui.images.Images.IMAGES;
 
 public class ConnectionWindow {
 	
@@ -39,6 +41,11 @@ public class ConnectionWindow {
 		shell = new Shell(SWT.CLOSE | SWT.TITLE | SWT.MIN);
 		shell.setSize(450, 225);
 		shell.setText("Menad\u017Cer sklepu - \u0142\u0105czenie z baz\u0105 danych");
+		try {
+			shell.setImage(Images.getImage(IMAGES.ICON));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		shell.setLayout(new GridLayout(2, false));
 	}
 

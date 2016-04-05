@@ -9,6 +9,8 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
 
+import wti.manager.gui.images.Images;
+import wti.manager.gui.images.Images.IMAGES;
 import wti.manager.gui.tabs.products.ProductsComposite;
 import wti.manager.gui.tabs.tags.TagsComposite;
 
@@ -27,6 +29,11 @@ public class MainWindow {
 		Shell shell = new Shell();
 		shell.setSize(800, 600);
 		shell.setText("Menad¿er sklepu");
+		try {
+			shell.setImage(Images.getImage(IMAGES.ICON));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		GridLayout gl_shell = new GridLayout(1, false);
 		gl_shell.marginHeight = 0;
 		gl_shell.marginWidth = 0;
