@@ -27,8 +27,6 @@
 
                 <div class="col-md-9">
 
-					<div>Wyszukiwanie zaawansowane</div>
-				
                     <h1>Wyniki wyszukiwania:</h1>
                     <div class="row">
                         <?php

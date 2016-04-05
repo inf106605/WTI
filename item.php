@@ -53,6 +53,30 @@
                                     </div>
                                 </form>';
                             }
+							
+							
+							$sth = $dbh->prepare("SELECT * FROM tag AS t
+												  JOIN products_has_tag AS ptt 
+												  ON t.id_tag = ptt.id_tag
+												  WHERE ptt.id_product = ?");
+                            $var = $_POST['id_product'];
+                            $sth->execute(array($var));
+							$results = $sth->fetchAll();
+							
+							echo '<form action="tag.php" method="POST"> 
+							<div class="form-inline">
+							<div class="form-group">
+							<label for="exampleInputName2">Tagi:</label>';
+							
+							foreach($results as $result) {
+								echo '<button name="name_tag" type="submit" class="btn btn-default" value="'.$result['name_tag'].'">'.$result['name_tag'].'</button>';
+							}
+							
+							echo '</div>
+								</div>
+							</form>';
+							
+							
                         } else
                             echo "Produkt nie istnieje!";
                         ?>
