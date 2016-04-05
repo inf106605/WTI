@@ -26,7 +26,7 @@ public abstract class PropertiesComposite<T extends ICloneable<T>> extends Compo
 	
 	
 	private T emptyData;
-	private T oryginalData;
+	private T originalData;
 	protected T data;
 	private boolean isNew = false;
 	private List<ISaveListener<T>> saveListeners = new LinkedList<ISaveListener<T>>();
@@ -92,6 +92,7 @@ public abstract class PropertiesComposite<T extends ICloneable<T>> extends Compo
 		if (!setData(emptyData))
 			return;
 		isNew = true;
+		setChanged();
 		for (INewListener listener : newListeners)
 			listener.onNew();
 	}
@@ -109,7 +110,7 @@ public abstract class PropertiesComposite<T extends ICloneable<T>> extends Compo
 	}
 	
 	private void saveChanges() {
-		oryginalData = data;
+		originalData = data;
 		for (ISaveListener<T> listener : saveListeners)
 			listener.onSaveChanges(isNew, data);
 		if (!newDataIsSaved())
@@ -129,10 +130,12 @@ public abstract class PropertiesComposite<T extends ICloneable<T>> extends Compo
 	}
 	
 	private void undoChanges() {
-		if (isNew)
+		if (isNew) {
+			originalData = null;
 			setDataForReal(null);
-		else
-			setDataForReal(oryginalData);
+		} else {
+			setDataForReal(originalData);
+		}
 	}
 	
 	private void configureComposites() {
@@ -157,22 +160,22 @@ public abstract class PropertiesComposite<T extends ICloneable<T>> extends Compo
 	}
 	
 	public boolean setData(T data) {
-		boolean newDataIsTheSameAsOld = oryginalData == null ? data == null : oryginalData.equals(data);
-		if (newDataIsTheSameAsOld && newDataIsSaved())
+		boolean newDataIsTheSameAsOld = originalData == null ? data == null : originalData.equals(data);
+		if (newDataIsTheSameAsOld && !newDataIsSaved())
 			return true;
 		if (areUnsavedChanges())
 			if (!askDiscardChanges())
 				return false;
-		oryginalData = data;
+		originalData = data;
 		return setDataForReal(data);
 	}
 
 	public boolean newDataIsSaved() {
-		return oryginalData != data;
+		return originalData == data;
 	}
 
 	public boolean areUnsavedChanges() {
-		return oryginalData != null && !this.data.equals(oryginalData);
+		return originalData != null && !this.data.equals(originalData);
 	}
 
 	private boolean setDataForReal(T data) {
