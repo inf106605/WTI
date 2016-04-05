@@ -81,10 +81,30 @@
 					<div class="form-group">
 						<center><button type="submit" class="btn btn-default">Szukaj teraz</button></center>
 					</div>
+				</form>
 					<h3>Chmura tagów:</h3>
+					<?php
+
+							$sth = $dbh->prepare("SELECT * FROM tag AS t
+												  JOIN products_has_tag AS ptt 
+												  ON t.id_tag = ptt.id_tag
+											     ");
+                            $sth->execute();
+							$results = $sth->fetchAll();
+							
 					
-					
-					</form>
+
+					echo '<form action="tag.php" method="POST"> 
+							<div class="form-inline">
+							<div class="form-group">';
+							
+							foreach($results as $result) {
+								echo '<button name="name_tag" type="submit" class="btn btn-default" value="'.$result['name_tag'].'">'.$result['name_tag'].'</button>';
+							}
+							
+							echo '</div>
+								</div>
+							</form>'; ?>
 					</div>
 					
 					<h1>Wyniki wyszukiwania zaawansowanego:</h1>
