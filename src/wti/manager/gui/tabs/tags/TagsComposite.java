@@ -54,14 +54,15 @@ public class TagsComposite extends Composite {
 		tagPropertiesComposite = new TagPropertiesComposite(this, SWT.NONE);
 		tagPropertiesComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		tagPropertiesComposite.addNewListener(this::onNewTag);
-		tagPropertiesComposite.addSaveListener(this::onSaveChanges);
+		tagPropertiesComposite.addSaveListener(this::onSaveTag);
+		tagPropertiesComposite.addDeleteListener(this::onDeleteTag);
 	}
 	
 	private void onNewTag() {
 		tagFindingList.deselectAll();
 	}
 	
-	private void onSaveChanges(boolean isNew, Tag newTag) {
+	private void onSaveTag(boolean isNew, Tag newTag) {
 		try {
 			if (isNew)
 				SessionUtils.runInSession((session) -> session.save(newTag));
@@ -73,6 +74,15 @@ public class TagsComposite extends Composite {
 			tagPropertiesComposite.setData(newTag);
 		} catch (DatabaseException e) {
 			ErrorMessages.showSaveError(getShell(), "tagu", e);
+		}
+	}
+	
+	private void onDeleteTag(Tag tagToDelete) {
+		try {
+			SessionUtils.runInSession((session) -> session.delete(tagToDelete));
+			tagFindingList.refresh();
+		} catch (DatabaseException e) {
+			ErrorMessages.showDeleteError(getShell(), "tagu", e);
 		}
 	}
 

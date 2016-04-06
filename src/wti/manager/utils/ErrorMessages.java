@@ -20,4 +20,11 @@ public final class ErrorMessages {
 		messageBox.open();
 	}
 	
+	public static void showDeleteError(Shell shell, String listName, DatabaseException e) {
+		MessageBox messageBox = new MessageBox(shell, SWT.ICON_ERROR);
+		messageBox.setText("B³¹d usuwania "+listName);
+		messageBox.setMessage("Nie uda³o siê usun¹æ "+listName+" z bazy danych!\n\nTreœæ wyj¹tku:\n"+e.getMessage());
+		messageBox.open();
+	}
+	
 }

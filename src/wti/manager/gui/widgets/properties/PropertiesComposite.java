@@ -16,12 +16,16 @@ import wti.manager.utils.ICloneable;
 
 public abstract class PropertiesComposite<T extends ICloneable<T>> extends Composite {
 
+	public static interface INewListener {
+		public void onNew();
+	}
+
 	public static interface ISaveListener<T> {
 		public void onSaveChanges(boolean isNew, T newData);
 	}
 	
-	public static interface INewListener {
-		public void onNew();
+	public static interface IDeleteListener<T> {
+		public void onDelete(T data);
 	}
 	
 	
@@ -29,12 +33,14 @@ public abstract class PropertiesComposite<T extends ICloneable<T>> extends Compo
 	private T originalData;
 	protected T data;
 	private boolean isNew = false;
-	private List<ISaveListener<T>> saveListeners = new LinkedList<ISaveListener<T>>();
 	private List<INewListener> newListeners = new LinkedList<INewListener>();
+	private List<ISaveListener<T>> saveListeners = new LinkedList<ISaveListener<T>>();
+	private List<IDeleteListener<T>> deleteListeners = new LinkedList<IDeleteListener<T>>();
 
 	private Button btnNew;
 	private Button btnSave;
 	private Button btnUndo;
+	private Button btnDelete;
 	
 	
 	public PropertiesComposite(Composite parent, int style, T emptyData) {
@@ -64,11 +70,12 @@ public abstract class PropertiesComposite<T extends ICloneable<T>> extends Compo
 		createButtonNew(compositeButtons);
 		createButtonSave(compositeButtons);
 		createButtonUndo(compositeButtons);
+		createButtonDelete(compositeButtons);
 	}
 
 	private Composite createCompositeButtonsItself() {
 		Composite compositeButtons = new Composite(this, SWT.NONE);
-		GridLayout gl_compositeButtons = new GridLayout(3, true);
+		GridLayout gl_compositeButtons = new GridLayout(4, true);
 		gl_compositeButtons.marginWidth = 0;
 		gl_compositeButtons.marginHeight = 0;
 		compositeButtons.setLayout(gl_compositeButtons);
@@ -92,6 +99,7 @@ public abstract class PropertiesComposite<T extends ICloneable<T>> extends Compo
 		if (!setData(emptyData))
 			return;
 		isNew = true;
+		btnDelete.setEnabled(false);
 		setChanged();
 		for (INewListener listener : newListeners)
 			listener.onNew();
@@ -137,10 +145,39 @@ public abstract class PropertiesComposite<T extends ICloneable<T>> extends Compo
 			setDataForReal(originalData);
 		}
 	}
+
+	private void createButtonDelete(Composite compositeButtons) {
+		btnDelete = new Button(compositeButtons, SWT.NONE);
+		btnDelete.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
+		btnDelete.setText("Usuñ");
+		btnDelete.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent event) {
+				deleteData();
+			}
+		});
+	}
+	
+	private void deleteData() {
+		T oldData = data;
+		if (!setData(null))
+			return;
+		for (IDeleteListener<T> listener : deleteListeners)
+			listener.onDelete(oldData);
+	}
 	
 	private void configureComposites() {
 		setEditable(false);
-		setButtonsEnabled(false);
+		setChangesButtonsEnabled(false);
+		btnDelete.setEnabled(false);
+	}
+	
+	public void addNewListener(INewListener listener) {
+		newListeners.add(listener);
+	}
+	
+	public void removeNewListener(INewListener listener) {
+		newListeners.remove(listener);
 	}
 	
 	public void addSaveListener(ISaveListener<T> listener) {
@@ -151,12 +188,12 @@ public abstract class PropertiesComposite<T extends ICloneable<T>> extends Compo
 		saveListeners.remove(listener);
 	}
 	
-	public void addNewListener(INewListener listener) {
-		newListeners.add(listener);
+	public void addDeleteListener(IDeleteListener<T> listener) {
+		deleteListeners.add(listener);
 	}
 	
-	public void removeNewListener(INewListener listener) {
-		newListeners.remove(listener);
+	public void removeDeleteListener(ISaveListener<T> listener) {
+		deleteListeners.remove(listener);
 	}
 	
 	public boolean setData(T data) {
@@ -183,10 +220,12 @@ public abstract class PropertiesComposite<T extends ICloneable<T>> extends Compo
 			data = null;
 			clearProperties();
 			setEditable(false);
+			btnDelete.setEnabled(false);
 		} else {
 			this.data = data.clone();
 			refreshProperties();
 			setEditable(true);
+			btnDelete.setEnabled(true);
 		}
 		setUnchanged();
 		isNew = false;
@@ -210,14 +249,14 @@ public abstract class PropertiesComposite<T extends ICloneable<T>> extends Compo
 	protected abstract void setEditable(boolean editable);
 	
 	protected void setChanged() {
-		setButtonsEnabled(true);
+		setChangesButtonsEnabled(true);
 	}
 
 	private void setUnchanged() {
-		setButtonsEnabled(false);
+		setChangesButtonsEnabled(false);
 	}
 	
-	private void setButtonsEnabled(boolean enabled) {
+	private void setChangesButtonsEnabled(boolean enabled) {
 		btnSave.setEnabled(enabled);
 		btnUndo.setEnabled(enabled);
 	}
