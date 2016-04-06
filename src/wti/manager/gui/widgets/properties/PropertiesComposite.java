@@ -211,10 +211,6 @@ public abstract class PropertiesComposite<T extends ICloneable<T>> extends Compo
 		return originalData == data;
 	}
 
-	public boolean areUnsavedChanges() {
-		return originalData != null && !this.data.equals(originalData);
-	}
-
 	private boolean setDataForReal(T data) {
 		if (data == null) {
 			data = null;
@@ -249,7 +245,7 @@ public abstract class PropertiesComposite<T extends ICloneable<T>> extends Compo
 	protected abstract void setEditable(boolean editable);
 	
 	protected void setChanged() {
-		setChangesButtonsEnabled(true);
+		setChangesButtonsEnabled(areUnsavedChanges());
 	}
 
 	private void setUnchanged() {
@@ -259,6 +255,10 @@ public abstract class PropertiesComposite<T extends ICloneable<T>> extends Compo
 	private void setChangesButtonsEnabled(boolean enabled) {
 		btnSave.setEnabled(enabled);
 		btnUndo.setEnabled(enabled);
+	}
+
+	public boolean areUnsavedChanges() {
+		return originalData != null && !this.data.equals(originalData);
 	}
 
 	@Override

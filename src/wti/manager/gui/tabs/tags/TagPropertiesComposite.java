@@ -22,8 +22,7 @@ public class TagPropertiesComposite extends PropertiesComposite<Tag> {
 	@Override
 	protected void createCompositeProperties() {
 		Composite compositeProperties = createCompositePropertiesItself();
-		createLabelName(compositeProperties);
-		createTextName(compositeProperties);
+		createNameControls(compositeProperties);
 	}
 
 	private Composite createCompositePropertiesItself() {
@@ -34,6 +33,11 @@ public class TagPropertiesComposite extends PropertiesComposite<Tag> {
 		compositeProperties.setLayout(gl_compositeProperties);
 		compositeProperties.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		return compositeProperties;
+	}
+
+	public void createNameControls(Composite compositeProperties) {
+		createLabelName(compositeProperties);
+		createTextName(compositeProperties);
 	}
 
 	private void createLabelName(Composite compositeProperties) {

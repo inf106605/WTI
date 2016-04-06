@@ -22,10 +22,10 @@ public class Product implements ITableRow<Product> {
 	private int id;
 	
 	@Column(name = "name_product", nullable = false)
-	private String name;
+	private String name = "";
 	
 	@Column(name = "descriptions", nullable = false)
-	private String description;
+	private String description = "";
 
 	
 	public Product() {
