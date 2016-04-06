@@ -12,7 +12,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.MessageBox;
 
-import wti.manager.utils.ICloneable;
+import wti.manager.interfaces.ICloneable;
 
 public abstract class PropertiesComposite<T extends ICloneable<T>> extends Composite {
 

@@ -1,4 +1,4 @@
-package wti.manager.utils;
+package wti.manager.interfaces;
 
 public interface ICloneable<T> extends Cloneable {
 

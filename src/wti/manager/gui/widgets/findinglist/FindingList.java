@@ -11,7 +11,9 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.List;
 
 import wti.manager.gui.widgets.textwithhint.TextWithHint;
-import wti.manager.utils.IHasId;
+import wti.manager.interfaces.IHasId;
+import wti.manager.utils.DatabaseException;
+import wti.manager.utils.ErrorMessages;
 
 public abstract class FindingList<T extends IHasId> extends Composite {
 	
@@ -32,6 +34,7 @@ public abstract class FindingList<T extends IHasId> extends Composite {
 		super(parent, style);
 		setLayout();
 		createControls();
+		refresh();
 	}
 
 	private void setLayout() {
@@ -88,6 +91,20 @@ public abstract class FindingList<T extends IHasId> extends Composite {
 		this.input = input;
 		refreshList();
 	}
+	
+	public void refresh() {
+		try {
+			java.util.List<T> data = getDataFromDatabase();
+			setInput(data);
+			reselectItem();
+		} catch (DatabaseException e) {
+			ErrorMessages.showListLoadError(getShell(), getDataName(), e);
+		}
+	}
+	
+	protected abstract java.util.List<T> getDataFromDatabase() throws DatabaseException;
+
+	protected abstract String getDataName();
 
 	private void refreshList() {
 		list.removeAll();

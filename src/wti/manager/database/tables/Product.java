@@ -10,11 +10,12 @@ import javax.persistence.Table;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 
-import wti.manager.utils.IHasId;
+import wti.manager.interfaces.ITableRow;
+import wti.manager.utils.Utils;
 
 @Entity
 @Table(name = "products")
-public class Product implements IHasId {
+public class Product implements ITableRow<Product> {
 
 	@Id
 	@Column(name = "id_product")
@@ -24,10 +25,10 @@ public class Product implements IHasId {
 	private String name;
 	
 	@Column(name = "descriptions", nullable = false)
-	private String descrition;
+	private String description;
 
 	
-	Product() {
+	public Product() {
 	}
 	
 	public Product(String name) {
@@ -47,11 +48,11 @@ public class Product implements IHasId {
 	}
 	
 	public String getDescryption() {
-		return descrition;
+		return description;
 	}
 	
 	public void setDescription(String description) {
-		this.descrition = description;
+		this.description = description;
 	}
 	
 	public static List<Product> getAll(Session session) {
@@ -64,6 +65,36 @@ public class Product implements IHasId {
 	@Override
 	public String toString() {
 		return "Product["+id+"](\""+name+"\")";
+	}
+	
+	public Product clone() {
+		Product product = new Product();
+		product.id = id;
+		product.name = name;
+		product.description = description;
+		return product;
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == this)
+			return true;
+		if (!(obj instanceof Product))
+			return false;
+		Product product = (Product) obj;
+		
+		boolean idOk = product.id == id;
+		boolean nameOk = product.name.equals(name);
+		boolean descriptionOk = product.description.equals(description);
+		return Utils.equalsFromBools(idOk, nameOk, descriptionOk);
+	}
+	
+	@Override
+	public int hashCode() {
+		int idHash = id;
+		int nameHash = name.hashCode();
+		int descriptionHash = description.hashCode();
+		return Utils.hashFromInts(idHash, nameHash, descriptionHash);
 	}
 	
 }

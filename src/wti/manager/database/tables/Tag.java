@@ -10,13 +10,12 @@ import javax.persistence.Table;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 
-import wti.manager.utils.ICloneable;
-import wti.manager.utils.IHasId;
+import wti.manager.interfaces.ITableRow;
 import wti.manager.utils.Utils;
 
 @Entity
 @Table(name = "tag")
-public class Tag implements IHasId, ICloneable<Tag> {
+public class Tag implements ITableRow<Tag> {
 
 	@Id
 	@Column(name = "id_tag")
