@@ -105,62 +105,91 @@
 							</form>'; ?>
 					</div>
 					
-					   <?php
+		<?php
                        
-					    function get_remote_data($url, $post_paramtrs = false) {
-    $c = curl_init();
-    curl_setopt($c, CURLOPT_URL, $url);
-    curl_setopt($c, CURLOPT_RETURNTRANSFER, 1);
-    if ($post_paramtrs) {
-        curl_setopt($c, CURLOPT_POST, TRUE);
-        curl_setopt($c, CURLOPT_POSTFIELDS, "var1=bla&" . $post_paramtrs);
-    } curl_setopt($c, CURLOPT_SSL_VERIFYHOST, false);
-    curl_setopt($c, CURLOPT_SSL_VERIFYPEER, false);
-    curl_setopt($c, CURLOPT_USERAGENT, "Mozilla/5.0 (Windows NT 6.1; rv:33.0) Gecko/20100101 Firefox/33.0");
-    curl_setopt($c, CURLOPT_COOKIE, 'CookieName1=Value;');
-    curl_setopt($c, CURLOPT_MAXREDIRS, 10);
-    $follow_allowed = ( ini_get('open_basedir') || ini_get('safe_mode')) ? false : true;
-    if ($follow_allowed) {
-        curl_setopt($c, CURLOPT_FOLLOWLOCATION, 1);
-    }curl_setopt($c, CURLOPT_CONNECTTIMEOUT, 9);
-    curl_setopt($c, CURLOPT_REFERER, $url);
-    curl_setopt($c, CURLOPT_TIMEOUT, 60);
-    curl_setopt($c, CURLOPT_AUTOREFERER, true);
-    curl_setopt($c, CURLOPT_ENCODING, 'gzip,deflate');
-    $data = curl_exec($c);
-    $status = curl_getinfo($c);
-    curl_close($c);
-    preg_match('/(http(|s)):\/\/(.*?)\/(.*\/|)/si', $status['url'], $link);
-    $data = preg_replace('/(src|href|action)=(\'|\")((?!(http|https|javascript:|\/\/|\/)).*?)(\'|\")/si', '$1=$2' . $link[0] . '$3$4$5', $data);
-    $data = preg_replace('/(src|href|action)=(\'|\")((?!(http|https|javascript:|\/\/)).*?)(\'|\")/si', '$1=$2' . $link[1] . '://' . $link[3] . '$3$4$5', $data);
-    if ($status['http_code'] == 200) {
-        return $data;
-    } elseif ($status['http_code'] == 301 || $status['http_code'] == 302) {
-        if (!$follow_allowed) {
-            if (empty($redirURL)) {
-                if (!empty($status['redirect_url'])) {
-                    $redirURL = $status['redirect_url'];
-                }
-            } if (empty($redirURL)) {
-                preg_match('/(Location:|URI:)(.*?)(\r|\n)/si', $data, $m);
-                if (!empty($m[2])) {
-                    $redirURL = $m[2];
-                }
-            } if (empty($redirURL)) {
-                preg_match('/href\=\"(.*?)\"(.*?)here\<\/a\>/si', $data, $m);
-                if (!empty($m[1])) {
-                    $redirURL = $m[1];
-                }
-            } if (!empty($redirURL)) {
-                $t = debug_backtrace();
-                return call_user_func($t[0]["function"], trim($redirURL), $post_paramtrs);
-            }
-        }
-    } return "ERRORCODE22 with $url!!<br/>Last status codes<b/>:" . json_encode($status) . "<br/><br/>Last data got<br/>:$data";
-}
-					   try{
-					   
-					                  
+			function get_remote_data($url, $post_paramtrs = false) {
+								
+				$c = curl_init();
+				curl_setopt($c, CURLOPT_URL, $url);
+				curl_setopt($c, CURLOPT_RETURNTRANSFER, 1);
+				
+				if ($post_paramtrs) 
+				{
+					curl_setopt($c, CURLOPT_POST, TRUE);
+					curl_setopt($c, CURLOPT_POSTFIELDS, "var1=bla&" . $post_paramtrs);
+				} 
+				
+				curl_setopt($c, CURLOPT_SSL_VERIFYHOST, false);
+				
+				curl_setopt($c, CURLOPT_SSL_VERIFYPEER, false);
+				curl_setopt($c, CURLOPT_USERAGENT, "Mozilla/5.0 (Windows NT 6.1; rv:33.0) Gecko/20100101 Firefox/33.0");
+				curl_setopt($c, CURLOPT_COOKIE, 'CookieName1=Value;');
+				curl_setopt($c, CURLOPT_MAXREDIRS, 10);
+				$follow_allowed = ( ini_get('open_basedir') || ini_get('safe_mode')) ? false : true;
+    
+				if ($follow_allowed) 
+				{
+					curl_setopt($c, CURLOPT_FOLLOWLOCATION, 1);
+				}
+				curl_setopt($c, CURLOPT_CONNECTTIMEOUT, 9);
+				curl_setopt($c, CURLOPT_REFERER, $url);
+				curl_setopt($c, CURLOPT_TIMEOUT, 60);
+				curl_setopt($c, CURLOPT_AUTOREFERER, true);
+				curl_setopt($c, CURLOPT_ENCODING, 'gzip,deflate');
+    
+				$data = curl_exec($c);
+				$status = curl_getinfo($c);
+				curl_close($c);
+				preg_match('/(http(|s)):\/\/(.*?)\/(.*\/|)/si', $status['url'], $link);
+				$data = preg_replace('/(src|href|action)=(\'|\")((?!(http|https|javascript:|\/\/|\/)).*?)(\'|\")/si', '$1=$2' . $link[0] . '$3$4$5', $data);
+				$data = preg_replace('/(src|href|action)=(\'|\")((?!(http|https|javascript:|\/\/)).*?)(\'|\")/si', '$1=$2' . $link[1] . '://' . $link[3] . '$3$4$5', $data);
+    
+				if ($status['http_code'] == 200) 
+				{
+					return $data;
+				} 
+				elseif ($status['http_code'] == 301 || $status['http_code'] == 302) 
+				{
+					if (!$follow_allowed) 
+					{
+						if (empty($redirURL)) 
+						{
+						
+							if (!empty($status['redirect_url'])) 
+							{
+								$redirURL = $status['redirect_url'];
+							}
+						} 
+						if (empty($redirURL)) 
+						{
+							preg_match('/(Location:|URI:)(.*?)(\r|\n)/si', $data, $m);
+							if (!empty($m[2])) 
+							{
+								$redirURL = $m[2];
+							}
+						} 
+						if (empty($redirURL)) 
+						{
+							preg_match('/href\=\"(.*?)\"(.*?)here\<\/a\>/si', $data, $m);
+							if (!empty($m[1])) 
+							{
+								$redirURL = $m[1];
+							}
+						} 
+						if (!empty($redirURL)) 
+						{
+							$t = debug_backtrace();
+							return call_user_func($t[0]["function"], trim($redirURL), $post_paramtrs);
+						}
+					}
+				} 
+				
+				return "ERRORCODE22 with $url!!<br/>Last status codes<b/>:" . json_encode($status) . "<br/><br/>Last data got<br/>:$data";
+			}
+
+
+			try{
+					   					                  
                         if (isset($_POST['words_input']) && isset($_POST['type_search_content']) && isset($_POST['tags_input']) && isset($_POST['date_search']) && isset($_POST['date_search_extension']) && isset($_POST['sort_by_type_content']) && isset($_POST['sort_type']))  
 						{
 
@@ -177,7 +206,7 @@
 						$word_input_replaced = str_replace($replace, " " , $word_input);						
 						
 						// splitowanie wyrazów z wykorzystaniem wyrażeń regularnych
-						$word_input_split = preg_split("/[\s,!@#$%^\&*()+-=\/<>{}?_]/", $word_input_replaced);
+						$word_input_split = preg_split("/[\s,!@#$%^\-=<>{}?_+]/", $word_input_replaced);
 						
 						echo "Słowo(a): ";
 						
@@ -197,7 +226,7 @@
 						
 						// splitowanie wyrazów z wykorzystaniem wyrażeń regularnych
 						
-						$tags_input_split = preg_split("/[\s,!@#$%^\&*()+-=\/<>{}?_]/", $tags_input_replaced);
+						$tags_input_split = preg_split("/[\s,!@#$%^\-=<>{}?_+]/", $tags_input_replaced);
 						
 						echo "<br />Tagi: ";
 						
@@ -321,41 +350,123 @@
 								 $date_last_logged = $result['date_last_logged'];
 							}
 							
-							if($_POST['date_search'] == 1 && ( $count_words || $count_tags ))
+							if($_POST['date_search'] == 1 && ( $count_words || $count_tags )) // obojętna data - czyli tak naprawdę wszystko
 							{
 								// wyszuka wszystkie niepotrzebny warunek
 							}
-							else if($_POST['date_search'] == 2 && ( $count_words || $count_tags ))
+							else if($_POST['date_search'] == 2 && ( $count_words || $count_tags )) // szukaj od twojej ostatniej wizyty
 							{
-								$command_query_advanced_search .= " AND p.date_add_products >= '$date_last_logged' AND p.date_add_products <= NOW()";
+								if($_POST['date_search_extension'] == 1)  // i nowsze
+								{
+									$command_query_advanced_search .= " AND p.date_add_products >= '$date_last_logged'";
+								}
+								else if($_POST['date_search_extension'] == 2) // i starsze
+								{
+									$command_query_advanced_search .= " AND p.date_add_products <= '$date_last_logged'";
+								}
 							}
-							else if($_POST['date_search'] == 3 && ( $count_words || $count_tags ))
+							else if($_POST['date_search'] == 3 && ( $count_words || $count_tags )) // szukaj dodane wczoraj
 							{
-								$command_query_advanced_search .= " AND p.date_add_products >= SUBDATE(NOW(),1) AND p.date_add_products <= NOW()";
+								if($_POST['date_search_extension'] == 1)  // i nowsze
+								{
+									$command_query_advanced_search .= " AND p.date_add_products >= SUBDATE(NOW(),1)";
+								}
+								else if($_POST['date_search_extension'] == 2) // i starsze
+								{
+									$command_query_advanced_search .= " AND p.date_add_products <= SUBDATE(NOW(),1)";
+								}
 							}
-							else if($_POST['date_search'] == 4 && ( $count_words || $count_tags ))
+							else if($_POST['date_search'] == 4 && ( $count_words || $count_tags )) // szukaj dodane tydzień temu
 							{
-								$command_query_advanced_search .= " AND p.date_add_products >= NOW() - INTERVAL 1 WEEK AND p.date_add_products <= NOW()";
+								if($_POST['date_search_extension'] == 1)  // i nowsze
+								{
+									$command_query_advanced_search .= " AND p.date_add_products >= NOW() - INTERVAL 1 WEEK";
+								}
+								else if($_POST['date_search_extension'] == 2) // i starsze
+								{
+									$command_query_advanced_search .= " AND p.date_add_products <= NOW() - INTERVAL 1 WEEK";
+								}
 							}
-							else if($_POST['date_search'] == 5 && ( $count_words || $count_tags ))
+							else if($_POST['date_search'] == 5 && ( $count_words || $count_tags )) // szukaj dodane 2 tygodnie temu
 							{
-								$command_query_advanced_search .= " AND p.date_add_products >= NOW() - INTERVAL 2 WEEK AND p.date_add_products <= NOW()";
+								if($_POST['date_search_extension'] == 1)  // i nowsze
+								{
+									$command_query_advanced_search .= " AND p.date_add_products >= NOW() - INTERVAL 2 WEEK";
+								}
+								else if($_POST['date_search_extension'] == 2) // i starsze
+								{
+									$command_query_advanced_search .= " AND p.date_add_products <= NOW() - INTERVAL 2 WEEK";
+								}
 							}
-							else if($_POST['date_search'] == 6 && ( $count_words || $count_tags ))
+							else if($_POST['date_search'] == 6 && ( $count_words || $count_tags )) // szukaj dodane miesiąc temu
 							{
-								$command_query_advanced_search .= " AND p.date_add_products >= DATEADD(month, -1, GETDATE()) AND p.date_add_products <= NOW()";
+								if($_POST['date_search_extension'] == 1)  // i nowsze
+								{
+									$command_query_advanced_search .= " AND p.date_add_products >= DATEADD(month, -1, GETDATE())";
+								}
+								else if($_POST['date_search_extension'] == 2) // i starsze
+								{
+									$command_query_advanced_search .= " AND p.date_add_products <= DATEADD(month, -1, GETDATE())";
+								}
 							}
-							else if($_POST['date_search'] == 7 && ( $count_words || $count_tags ))
+							else if($_POST['date_search'] == 7 && ( $count_words || $count_tags )) // szukaj dodane 3 miesiące temu
 							{
-								$command_query_advanced_search .= " AND p.date_add_products >= DATEADD(month, -3, GETDATE()) AND p.date_add_products <= NOW()";
+								if($_POST['date_search_extension'] == 1)  // i nowsze
+								{
+									$command_query_advanced_search .= " AND p.date_add_products >= DATEADD(month, -3, GETDATE())";
+								}
+								else if($_POST['date_search_extension'] == 2) // i starsze
+								{
+									$command_query_advanced_search .= " AND p.date_add_products <= DATEADD(month, -3, GETDATE())";
+								}	
 							}
-							else if($_POST['date_search'] == 8 && ( $count_words || $count_tags ))
+							else if($_POST['date_search'] == 8 && ( $count_words || $count_tags )) // szukaj dodane rok temu
 							{
-								$command_query_advanced_search .= " AND p.date_add_products >= DATE_SUB(NOW(),INTERVAL 1 YEAR) <= p.date_add_products <= NOW()";
+								if($_POST['date_search_extension'] == 1)  // i nowsze
+								{
+									$command_query_advanced_search .= " AND p.date_add_products >= DATE_SUB(NOW(),INTERVAL 1 YEAR)";
+								}
+								else if($_POST['date_search_extension'] == 2) // i starsze
+								{
+									$command_query_advanced_search .= " AND p.date_add_products <= DATE_SUB(NOW(),INTERVAL 1 YEAR)";
+								}	
 							}
 						}
 						
+						// grupowanie po id produktu
+						
 						$command_query_advanced_search .= " GROUP BY p.id_product";
+						
+						// sortowanie 
+						
+						$command_query_advanced_search .= " ORDER BY ";
+						
+						if($_POST['sort_by_type_content'] == 1) // jeśli sortowanie po tytule 
+						{
+							$command_query_advanced_search .= " p.name_product "; // to wtedy dołączam do stringa zapytania sql name_product
+							
+							if($_POST['sort_type'] == 1)
+							{
+								$command_query_advanced_search .= " DESC"; // sortowanie malejąco
+							}
+							else if($_POST['sort_type'] == 2)
+							{
+								$command_query_advanced_search .= " ASC"; // sortowanie rosnąco
+							}
+						}
+						else if($_POST['sort_by_type_content'] == 2) // jeśli sortowanie po dacie dodania produktu
+						{
+							$command_query_advanced_search .= " p.date_add_products "; // to wtedy dołączam do stringa zapytania sql date_add_products
+							
+							if($_POST['sort_type'] == 1)
+							{
+								$command_query_advanced_search .= " DESC"; // sortowanie malejąco
+							}
+							else if($_POST['sort_type'] == 2)
+							{
+								$command_query_advanced_search .= " ASC"; // sortowanie rosnąco
+							}
+						}
 						
 						echo $command_query_advanced_search;
 						
@@ -452,13 +563,8 @@
                     </div>
                 </div>
             </div>
-
         </div>
         <!-- /.container -->
-
         <?php include 'footer.php'; ?>
-
     </body>
-
-
 </html>
