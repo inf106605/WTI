@@ -230,10 +230,10 @@
 						*/
 						
 						
-						
-
 						echo '<h1>Wyniki wyszukiwania zaawansowanego:</h1>
 						<div class="row">';
+						
+						$command_query_advanced_search = 
 						
 						$sth = $dbh->prepare("SELECT * FROM Products WHERE name_product like ?");
 						$var = $_POST['words_input'];
