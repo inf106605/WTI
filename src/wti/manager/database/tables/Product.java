@@ -39,7 +39,7 @@ public class Product implements INamedTableRow<Product> {
 			@JoinColumn(name = "id_product", nullable = false, updatable = false) }, 
 			inverseJoinColumns = { @JoinColumn(name = "id_tag", 
 					nullable = false, updatable = false) })
-	Set<Tag> tags;
+	Set<Tag> tags = new HashSet<Tag>();
 	
 	
 	public Product() {
