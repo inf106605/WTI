@@ -139,6 +139,7 @@ public class ProductPropertiesComposite extends PropertiesComposite<Product> {
 	
 	private void onEditTags() {
 		InteligentTags.refreshTags(data);
+		fillListTags();
 		setChanged();
 	}
 
