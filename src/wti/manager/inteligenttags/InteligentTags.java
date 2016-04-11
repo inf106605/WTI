@@ -73,23 +73,25 @@ public class InteligentTags {
 	private static List<String> deleteStopwords(String[] wordsBefore)
 	{
 		Document doc = null;
+		List<String> wyrazy = new ArrayList<String>();
 		
 		try 
 		{
 			doc = Jsoup.connect("https://pl.wikipedia.org/wiki/Wikipedia:Stopwords").get();
+			String stopwords = doc.select("p").get(1).text();
+			
+			for(String wyr : wordsBefore)
+			{
+				if(!stopwords.contains(wyr.toLowerCase()))
+				{
+					wyrazy.add(wyr.toLowerCase());
+				}
+			}
 		} catch (IOException e) 
 		{
 			e.printStackTrace();
 		}
-		String stopwords = doc.select("p").get(1).text();
-		List<String> wyrazy = new ArrayList<String>();
-		for(String wyr : wordsBefore)
-		{
-			if(!stopwords.contains(wyr.toLowerCase()))
-			{
-				wyrazy.add(wyr.toLowerCase());
-			}
-		}
+		
 		return wyrazy; 
 	}
 	
@@ -103,23 +105,24 @@ public class InteligentTags {
 			try 
 			{
 				doc = Jsoup.connect("http://sjp.pl/" + wyr).get();
+				Elements elems = doc.select("th[colspan]");
+				if(!elems.isEmpty()) //jeœli nie ma takiego s³owa
+				{
+					String elem = elems.first().text();
+					//Wiki
+					//okreœlenie czêœci mowy wyrazu
+					ListOfTags.addAll(findInWiki(elem, wyr));
+				}
+				else
+				{
+					ListOfTags.add(wyr);
+				}
 			} catch (IOException e) 
 				{
 				e.printStackTrace();
 			}
 			
-			Elements elems = doc.select("th[colspan]");
-			if(!elems.isEmpty()) //jeœli nie ma takiego s³owa
-			{
-				String elem = elems.first().text();
-				//Wiki
-				//okreœlenie czêœci mowy wyrazu
-				ListOfTags.addAll(findInWiki(elem, wyr));
-			}
-			else
-			{
-				ListOfTags.add(wyr);
-			}
+			
 		}
 		
 		return ListOfTags;
