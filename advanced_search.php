@@ -233,19 +233,136 @@
 						echo '<h1>Wyniki wyszukiwania zaawansowanego:</h1>
 						<div class="row">';
 						
-						$command_query_advanced_search = 
+						$command_query_advanced_search = "SELECT * FROM Products p
+														  JOIN products_has_tag AS ptt ON
+														  p.id_product = ptt.id_product
+														  JOIN tag AS t ON
+														  t.id_tag = ptt.id_tag
+														  JOIN category c ON
+														  c.id_category = p.id_category
+														  JOIN producer pr ON
+														  pr.id_producer = p.id_producer 
+														  WHERE ";
 						
-						$sth = $dbh->prepare("SELECT * FROM Products WHERE name_product like ?");
-						$var = $_POST['words_input'];
-						$sth->bindValue(1,"%$var%", PDO::PARAM_STR);
+						// "SELECT * FROM Products WHERE name_product like ?"
+						
+						
+						$count_words = 0;
+						$x = 0;  // zmienna pomocnicza przy określaniu ile mamy słów w tablicy , przydatna przy stawianiu łączników AND
+						
+						foreach($word_input_split as $result)
+						{
+							if($result != "")
+							{
+								$count_words++;
+								if($_POST['type_search_content'] == 1)
+								{
+										$x++;
+										if( $x ==1 )
+										{
+											$command_query_advanced_search .= "p.name_product LIKE '%$result%'";
+										}
+										else 
+										{
+											$command_query_advanced_search .= " AND p.name_product LIKE '%result%' ";
+										}
+								}
+								else if($_POST['type_search_content'] == 2)
+								{
+									$x++;
+									if( $x ==1 )
+									{
+										$command_query_advanced_search .= "p.descriptions LIKE '%$result%'";
+									}
+									else 
+									{
+										$command_query_advanced_search .= " AND p.descriptions LIKE '%$result%'";
+									}
+								}
+							}
+						}
+						
+						$count_tags = 0;
+						$x = 0; // zmienna pomocnicza przy określaniu ile mamy tagów w tablicy , przydatna przy stawianiu łączników AND
+						
+						foreach($tags_input_split as $result)
+						{
+							if($result != "")
+							{
+								$x++;
+								$count_tags++;
+								if( $x == 1 && $count_words == 0  )
+								{
+									$command_query_advanced_search .= "t.name_tag LIKE '%$result%'";
+								}
+								else
+								{
+									$command_query_advanced_search .= " AND t.name_tag LIKE '%$result%'";
+								}
+							}
 							
-							$sth->execute();
+							$count_tags++;
+						}
+						
+						// wyszukiwanie dla zalogowanych użytkowników , np. szukanie produktów które zostały niedawno dodane
+						
+						if (isset($_SESSION['user'])) {
+						
+							$sth = $dbh->prepare("SELECT date_last_logged FROM Client 
+												  WHERE user_login =  ?");
+							$var = array($_SESSION['user']);
+							$sth->execute($var);
 							$results = $sth->fetchAll();
 						
+							$date_last_logged = '';
+							
+							foreach($results as $result)
+							{
+								 $date_last_logged = $result['date_last_logged'];
+							}
+							
+							if($_POST['date_search'] == 1 && ( $count_words || $count_tags ))
+							{
+								// wyszuka wszystkie niepotrzebny warunek
+							}
+							else if($_POST['date_search'] == 2 && ( $count_words || $count_tags ))
+							{
+								$command_query_advanced_search .= " AND p.date_add_products >= '$date_last_logged' AND p.date_add_products <= NOW()";
+							}
+							else if($_POST['date_search'] == 3 && ( $count_words || $count_tags ))
+							{
+								$command_query_advanced_search .= " AND p.date_add_products >= SUBDATE(NOW(),1) AND p.date_add_products <= NOW()";
+							}
+							else if($_POST['date_search'] == 4 && ( $count_words || $count_tags ))
+							{
+								$command_query_advanced_search .= " AND p.date_add_products >= NOW() - INTERVAL 1 WEEK AND p.date_add_products <= NOW()";
+							}
+							else if($_POST['date_search'] == 5 && ( $count_words || $count_tags ))
+							{
+								$command_query_advanced_search .= " AND p.date_add_products >= NOW() - INTERVAL 2 WEEK AND p.date_add_products <= NOW()";
+							}
+							else if($_POST['date_search'] == 6 && ( $count_words || $count_tags ))
+							{
+								$command_query_advanced_search .= " AND p.date_add_products >= DATEADD(month, -1, GETDATE()) AND p.date_add_products <= NOW()";
+							}
+							else if($_POST['date_search'] == 7 && ( $count_words || $count_tags ))
+							{
+								$command_query_advanced_search .= " AND p.date_add_products >= DATEADD(month, -3, GETDATE()) AND p.date_add_products <= NOW()";
+							}
+							else if($_POST['date_search'] == 8 && ( $count_words || $count_tags ))
+							{
+								$command_query_advanced_search .= " AND p.date_add_products >= DATE_SUB(NOW(),INTERVAL 1 YEAR) <= p.date_add_products <= NOW()";
+							}
+						}
 						
+						$command_query_advanced_search .= " GROUP BY p.id_product";
 						
-												                           
-
+						echo $command_query_advanced_search;
+						
+						$sth = $dbh->prepare($command_query_advanced_search);
+						$sth->execute();
+						$results = $sth->fetchAll();
+						
 								foreach($results as $result) { 
 
 
