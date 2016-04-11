@@ -1,5 +1,8 @@
 package wti.manager.utils;
 
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
+
 public final class Utils {
 
 	public static boolean equalsFromBools(boolean... bools) {
@@ -18,6 +21,12 @@ public final class Utils {
 			result += integer;
 		}
 		return result;
+	}
+	
+	public static Shell getShell() {
+		Display display = Display.getDefault();
+		Shell shell = display.getActiveShell();
+		return shell;
 	}
 	
 }

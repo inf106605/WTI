@@ -1,6 +1,8 @@
 package wti.manager.gui.tabs.products;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -12,12 +14,16 @@ import wti.manager.database.tables.Product;
 import wti.manager.database.tables.Tag;
 import wti.manager.gui.widgets.properties.PropertiesComposite;
 import wti.manager.gui.widgets.readonlylist.ReadOnlyList;
+import wti.manager.inteligenttags.InteligentTags;
+
+import org.eclipse.swt.widgets.Button;
 
 public class ProductPropertiesComposite extends PropertiesComposite<Product> {
 	
 	private Text textName;
 	private Text textDescription;
 	private List listTags;
+	private Button btnEditTags;
 	
 
 	public ProductPropertiesComposite(Composite parent, int style) {
@@ -90,7 +96,7 @@ public class ProductPropertiesComposite extends PropertiesComposite<Product> {
 
 	private void createTagsControls(Composite compositeProperties) {
 		createLabelTags(compositeProperties);
-		createListTags(compositeProperties);
+		createCompositeTags(compositeProperties);
 	}
 
 	private void createLabelTags(Composite compositeProperties) {
@@ -99,9 +105,41 @@ public class ProductPropertiesComposite extends PropertiesComposite<Product> {
 		lblTags.setText("Tagi");
 	}
 	
-	private void createListTags(Composite compositeProperties) {
-		listTags = new ReadOnlyList(compositeProperties, SWT.BORDER | SWT.V_SCROLL);
+	private void createCompositeTags(Composite compositeProperties) {
+		Composite compositeTags = createCompositeTagsItself(compositeProperties);
+		createListTags(compositeTags);
+		createButtonEditTags(compositeTags);
+	}
+	
+	private Composite createCompositeTagsItself(Composite compositeProperties) {
+		Composite compositeTags = new Composite(compositeProperties, SWT.NONE);
+		GridLayout gl_compositeTags = new GridLayout(3, false);
+		gl_compositeTags.marginWidth = 0;
+		gl_compositeTags.marginHeight = 0;
+		compositeTags.setLayout(gl_compositeTags);
+		compositeTags.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		return compositeTags;
+	}
+	
+	private void createListTags(Composite compositeTags) {
+		listTags = new ReadOnlyList(compositeTags, SWT.BORDER | SWT.V_SCROLL);
 		listTags.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+	}
+	
+	private void createButtonEditTags(Composite compositeTags) {
+		btnEditTags = new Button(compositeTags, SWT.NONE);
+		btnEditTags.setText("Edytuj tagi");
+		btnEditTags.addSelectionListener(new SelectionAdapter(){
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				onEditTags();
+			}
+		});
+	}
+	
+	private void onEditTags() {
+		InteligentTags.refreshTags(data);
+		setChanged();
 	}
 
 	@Override
@@ -134,6 +172,7 @@ public class ProductPropertiesComposite extends PropertiesComposite<Product> {
 		textName.setEditable(editable);
 		textDescription.setEditable(editable);
 		listTags.setEnabled(editable);
+		btnEditTags.setEnabled(editable);
 	}
 
 }
