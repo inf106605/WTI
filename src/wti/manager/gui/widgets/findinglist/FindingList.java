@@ -110,10 +110,10 @@ public abstract class FindingList<T extends IHasId> extends Composite {
 		list.removeAll();
 		if (input == null)
 			return;
-		String filter = textFilter.getText();
+		String filter = textFilter.getText().toLowerCase();
 		for (T object : input) {
 			String objectName = getName(object);
-			if (!objectName.contains(filter))
+			if (!objectName.toLowerCase().contains(filter))
 				continue;
 			list.add(objectName);
 		}
