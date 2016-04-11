@@ -49,7 +49,7 @@ public class InteligentTags {
 		//proposedTags.add(new ProposedTag("wow", null, true));
 		//proposedTags.add(new ProposedTag("humf", new Tag(), true));
 		
-		EditTagsDialog editTagsDialog = new EditTagsDialog(Utils.getShell(), SWT.DIALOG_TRIM | SWT.RESIZE | SWT.APPLICATION_MODAL, proposedTags);
+		EditTagsDialog editTagsDialog = new EditTagsDialog(Utils.getShell(), SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL, proposedTags);
 		if (!editTagsDialog.open())
 			return; //Cancel
 		
@@ -118,7 +118,6 @@ public class InteligentTags {
 			}
 			else
 			{
-				out.println(wyr + " - nie jest s³owem");
 				ListOfTags.add(wyr);
 			}
 		}
@@ -163,6 +162,7 @@ public class InteligentTags {
 		createNewTags(newTags);
 		return newTags;
 	}
+	
 	private static Tag createNewTagsFromNames(String newTagName) throws DatabaseException {
 		Tag newTag = new Tag();
 		newTag.setName(newTagName);
