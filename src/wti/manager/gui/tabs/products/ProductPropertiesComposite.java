@@ -90,7 +90,7 @@ public class ProductPropertiesComposite extends PropertiesComposite<Product> {
 	
 	private void onModifyDescription() {
 		String description = textDescription.getText();
-		data.setDescription(description);
+		data.setReadableDescription(description);
 		setChanged();
 	}
 
@@ -157,7 +157,7 @@ public class ProductPropertiesComposite extends PropertiesComposite<Product> {
 	@Override
 	protected void refreshProperties() {
 		textName.setText(data.getName());
-		textDescription.setText(data.getDescryption());
+		textDescription.setText(data.getReadableDescription());
 		fillListTags();
 	}
 	

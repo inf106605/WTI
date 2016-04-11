@@ -61,11 +61,21 @@ public class Product implements ITableRow<Product> {
 		this.name = name;
 	}
 	
-	public String getDescryption() {
+	public String getDescription() {
 		return description;
 	}
 	
 	public void setDescription(String description) {
+		this.description = description;
+	}
+	
+	public String getReadableDescription() {
+		String readableDescription = description.replaceAll(" *?<br *?/> *?\\R?", "\r\n");
+		return readableDescription;
+	}
+	
+	public void setReadableDescription(String readableDescription) {
+		String description = readableDescription.replaceAll("\\R", " <br />\r\n");
 		this.description = description;
 	}
 	
