@@ -17,12 +17,12 @@ import javax.persistence.Table;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 
-import wti.manager.interfaces.ITableRow;
+import wti.manager.interfaces.INamedTableRow;
 import wti.manager.utils.Utils;
 
 @Entity
 @Table(name = "products")
-public class Product implements ITableRow<Product> {
+public class Product implements INamedTableRow<Product> {
 
 	@Id
 	@Column(name = "id_product")

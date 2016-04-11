@@ -10,12 +10,12 @@ import javax.persistence.Table;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 
-import wti.manager.interfaces.ITableRow;
+import wti.manager.interfaces.INamedTableRow;
 import wti.manager.utils.Utils;
 
 @Entity
 @Table(name = "tag")
-public class Tag implements ITableRow<Tag> {
+public class Tag implements INamedTableRow<Tag> {
 
 	@Id
 	@Column(name = "id_tag")

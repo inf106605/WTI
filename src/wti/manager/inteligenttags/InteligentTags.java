@@ -22,7 +22,6 @@ public class InteligentTags {
 		List<Tag> tags = SessionUtils.runInSession(Tag::getAll);
 		*/
 		
-		/*
 		//Example code to show tag dialog
 		List<ProposedTag> proposedTags = new LinkedList<ProposedTag>();
 		proposedTags.add(new ProposedTag("lol", null, false));
@@ -34,7 +33,6 @@ public class InteligentTags {
 			; //OK
 		else
 			; //Cancel
-		*/
 	}
 	
 }
