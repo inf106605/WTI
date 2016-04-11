@@ -93,6 +93,10 @@ public abstract class DatabaseTableTabComposite<T extends ITableRow<T>> extends 
 	}
 
 	protected abstract String getDataName();
+	
+	public void refresh() {
+		findingList.refresh();
+	}
 
 	@Override
 	protected void checkSubclass() {
