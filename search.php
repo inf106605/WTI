@@ -43,13 +43,9 @@
 						$var = $_POST['pole_szukaj'];
 						$sth->bindValue(1,"%$var%", PDO::PARAM_STR);
 							
-							$sth->execute();
-							$results = $sth->fetchAll();
+						$sth->execute();
+						$results = $sth->fetchAll();
 						
-						
-						
-												                           
-
                              foreach($results as $result) { 
 
 
