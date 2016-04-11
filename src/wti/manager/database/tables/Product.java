@@ -1,10 +1,17 @@
 package wti.manager.database.tables;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
 import org.hibernate.Criteria;
@@ -26,7 +33,14 @@ public class Product implements ITableRow<Product> {
 	
 	@Column(name = "descriptions", nullable = false)
 	private String description = "";
-
+	
+	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@JoinTable(name = "products_has_tag", joinColumns = { 
+			@JoinColumn(name = "id_product", nullable = false, updatable = false) }, 
+			inverseJoinColumns = { @JoinColumn(name = "id_tag", 
+					nullable = false, updatable = false) })
+	Set<Tag> tags;
+	
 	
 	public Product() {
 	}
@@ -55,6 +69,14 @@ public class Product implements ITableRow<Product> {
 		this.description = description;
 	}
 	
+	public Set<Tag> getTags() {
+		return tags;
+	}
+	
+	public void setTags(Set<Tag> tags) {
+		this.tags = tags;
+	}
+	
 	public static List<Product> getAll(Session session) {
 		Criteria criteria = session.createCriteria(Product.class);
 		@SuppressWarnings("unchecked")
@@ -64,7 +86,7 @@ public class Product implements ITableRow<Product> {
 	
 	@Override
 	public String toString() {
-		return "Product["+id+"](\""+name+"\")";
+		return "Product["+id+"](\""+name+"\", "+tags.size()+" tags)";
 	}
 	
 	public Product clone() {
@@ -72,6 +94,7 @@ public class Product implements ITableRow<Product> {
 		product.id = id;
 		product.name = name;
 		product.description = description;
+		product.tags = new HashSet<Tag>(tags);
 		return product;
 	}
 	
@@ -86,7 +109,8 @@ public class Product implements ITableRow<Product> {
 		boolean idOk = product.id == id;
 		boolean nameOk = product.name.equals(name);
 		boolean descriptionOk = product.description.equals(description);
-		return Utils.equalsFromBools(idOk, nameOk, descriptionOk);
+		boolean tagsOk = product.tags.equals(tags);
+		return Utils.equalsFromBools(idOk, nameOk, descriptionOk, tagsOk);
 	}
 	
 	@Override
@@ -94,7 +118,8 @@ public class Product implements ITableRow<Product> {
 		int idHash = id;
 		int nameHash = name.hashCode();
 		int descriptionHash = description.hashCode();
-		return Utils.hashFromInts(idHash, nameHash, descriptionHash);
+		int tagsHash = tags.hashCode();
+		return Utils.hashFromInts(idHash, nameHash, descriptionHash, tagsHash);
 	}
 	
 }
