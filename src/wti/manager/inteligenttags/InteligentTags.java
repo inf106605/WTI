@@ -30,7 +30,7 @@ public class InteligentTags {
 		proposedTags.add(new ProposedTag("omg", new Tag(), false));
 		proposedTags.add(new ProposedTag("wow", null, true));
 		proposedTags.add(new ProposedTag("humf", new Tag(), true));
-		EditTagsDialog editTagsDialog = new EditTagsDialog(Utils.getShell(), SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL, proposedTags);
+		EditTagsDialog editTagsDialog = new EditTagsDialog(Utils.getShell(), SWT.DIALOG_TRIM | SWT.RESIZE | SWT.APPLICATION_MODAL, proposedTags);
 		if (editTagsDialog.open())
 			; //OK
 		else

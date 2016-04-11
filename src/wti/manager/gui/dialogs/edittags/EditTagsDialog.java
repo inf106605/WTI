@@ -16,6 +16,8 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 
 import wti.manager.database.tables.Tag;
+import wti.manager.gui.images.Images;
+import wti.manager.gui.images.Images.IMAGES;
 
 public class EditTagsDialog extends Dialog {
 
@@ -32,14 +34,19 @@ public class EditTagsDialog extends Dialog {
 
 	public EditTagsDialog(Shell parent, int style, Collection<ProposedTag> proposedTags) {
 		super(parent, style);
-		setText("Edycja tagów");
 		this.proposedTags = proposedTags;
+		setText("Edycja tagów");
 	}
 
 	public boolean open() {
 		createContents();
 		shell.open();
 		shell.layout();
+		try {
+			shell.setImage(Images.getImage(IMAGES.ICON));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		Display display = getParent().getDisplay();
 		while (!shell.isDisposed()) {
 			if (!display.readAndDispatch()) {
