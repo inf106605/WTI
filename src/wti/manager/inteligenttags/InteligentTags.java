@@ -1,5 +1,6 @@
 package wti.manager.inteligenttags;
 
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -9,6 +10,7 @@ import wti.manager.database.tables.Product;
 import wti.manager.database.tables.Tag;
 import wti.manager.gui.dialogs.edittags.EditTagsDialog;
 import wti.manager.gui.dialogs.edittags.ProposedTag;
+import wti.manager.utils.DatabaseException;
 import wti.manager.utils.SessionUtils;
 import wti.manager.utils.Utils;
 
@@ -33,6 +35,25 @@ public class InteligentTags {
 			; //OK
 		else
 			; //Cancel
+	}
+	
+	private static List<Tag> createNewTagsFromNames(Iterable<String> newTagNames) throws DatabaseException {
+		List<Tag> newTags = new LinkedList<Tag>();
+		for (String newTagName : newTagNames) {
+			Tag newTag = new Tag();
+			newTag.setName(newTagName);
+			newTags.add(newTag);
+		}
+		createNewTags(newTags);
+		return newTags;
+	}
+	
+	private static void createNewTags(Iterable<Tag> newTags) throws DatabaseException {
+		SessionUtils.runInSession((session) -> {
+			for (Tag newTag : newTags) {
+				session.save(newTag);
+			}
+		});
 	}
 	
 }
