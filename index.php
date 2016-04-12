@@ -64,11 +64,15 @@
                     </div>
 
                     <h1>Polecane produkty:</h1>
-
+					
                     <div class="row">                        
 
                         <?php
-
+						
+						// read cookies in php , generated in javascript
+						
+						// print_r($_COOKIE);
+						
 						try{
 						
                         if (isset($POST['pole_szukaj'])) {
