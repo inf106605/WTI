@@ -92,25 +92,40 @@
 					<h3>Popularne tagi:</h3>
 					<?php
 
-							$sth = $dbh->prepare("SELECT * FROM tag AS t
-												  JOIN products_has_tag AS ptt 
-												  ON t.id_tag = ptt.id_tag
-											     ");
-                            $sth->execute();
-							$results = $sth->fetchAll();
+			
+				$a = new CIndex();
+
+				$getTagsCloudArray1 = $a->GetTagsCloudsArray();
+				
+				/*
+				$sth = $dbh->prepare("SELECT * 
+										FROM (
+										SELECT id_tag, name_tag, COUNT(id_tag) AS TagsCount 
+										FROM products_has_tag
+										NATURAL JOIN tag
+										GROUP BY id_tag
+										) AS TagsCountQuery
+										ORDER BY TagsCount DESC
+										LIMIT 25");
+				$sth->execute();
+				$results = $sth->fetchAll();
+				
+				*/
+				
 							
-					echo '<form action="tag.php" method="POST"> 
+				echo '<form action="tag.php" method="POST"> 
 							<div class="form-inline">
 							<div class="form-group">';
 							
-							foreach($results as $result) {
-								echo '<button name="name_tag" type="submit" class="btn btn-default" value="'.$result['name_tag'].'">'.$result['name_tag'].'</button>';
-							}
+				foreach($getTagsCloudArray1 as $result) 
+				{
+						echo '<button id="'.$result->m_sTagsClass.'" name="name_tag" type="submit" class="btn btn-default" value="'.$result->m_sTagName.'">'.$result->m_sTagName.'</button>';
+				}
 							
-							echo '</div>
-								</div>
-							</form>'; ?>
+				echo '</div>
 					</div>
+				</form>'; ?>
+			</div>
 					
 		<?php
                        
