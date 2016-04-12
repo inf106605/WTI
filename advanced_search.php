@@ -51,7 +51,13 @@
 							<label for="exampleInputName2">Szukaj produktów po:</label>
 							<select name="date_search" class="form-control">
 								<option value="1">Obojętna data</option>
-								<option value="2">Od twojej ostatniej wizyty</option>
+								<?php  // wywołanie opcji z wartością 2 pod warunkiem, że z wyszukiwarki korzysta zalogowany użytkownik
+								
+								if (isset($_SESSION['user']))
+								{
+								  echo '<option value="2">Od twojej ostatniej wizyty</option>';
+								}
+								?>
 								<option value="3">Wczoraj</option>
 								<option value="4">Tydzień temu</option>
 								<option value="5">2 tygodnie temu</option>
@@ -82,7 +88,7 @@
 						<center><button type="submit" class="btn btn-default">Szukaj teraz</button></center>
 					</div>
 				</form>
-					<h3>Chmura tagów:</h3>
+					<h3>Popularne tagi:</h3>
 					<?php
 
 							$sth = $dbh->prepare("SELECT * FROM tag AS t
@@ -335,7 +341,7 @@
 						
 						// wyszukiwanie dla zalogowanych użytkowników , np. szukanie produktów które zostały niedawno dodane
 						
-						if (isset($_SESSION['user'])) {
+						if (isset($_SESSION['user'])) { // jedyny przypadek w wyszukiwaniu , gdzie jest potrzebny zalogowany użytkownik
 						
 							$sth = $dbh->prepare("SELECT date_last_logged FROM Client 
 												  WHERE user_login =  ?");
@@ -350,11 +356,7 @@
 								 $date_last_logged = $result['date_last_logged'];
 							}
 							
-							if($_POST['date_search'] == 1 && ( $count_words || $count_tags )) // obojętna data - czyli tak naprawdę wszystko
-							{
-								// wyszuka wszystkie niepotrzebny warunek
-							}
-							else if($_POST['date_search'] == 2 && ( $count_words || $count_tags )) // szukaj od twojej ostatniej wizyty
+							if($_POST['date_search'] == 2 && ( $count_words || $count_tags )) // szukaj od twojej ostatniej wizyty
 							{
 								if($_POST['date_search_extension'] == 1)  // i nowsze
 								{
@@ -365,6 +367,15 @@
 									$command_query_advanced_search .= " AND p.date_add_products <= '$date_last_logged'";
 								}
 							}
+						}
+						
+						// reszta warunków wyszukiwania spełni się niezależnie od tego czy z wyszukiwarki korzysta gość czy zalogowany użytkownik
+							
+							if($_POST['date_search'] == 1 && ( $count_words || $count_tags )) // obojętna data - czyli tak naprawdę wszystko
+							{
+								// wyszuka wszystkie niepotrzebny warunek
+							}
+
 							else if($_POST['date_search'] == 3 && ( $count_words || $count_tags )) // szukaj dodane wczoraj
 							{
 								if($_POST['date_search_extension'] == 1)  // i nowsze
@@ -431,7 +442,7 @@
 									$command_query_advanced_search .= " AND p.date_add_products <= DATE_SUB(NOW(),INTERVAL 1 YEAR)";
 								}	
 							}
-						}
+						
 						
 						// grupowanie po id produktu
 						
