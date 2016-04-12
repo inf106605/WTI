@@ -35,20 +35,35 @@
         <div class="list-group-item">
            <?php 
 		   
-				$sth = $dbh->prepare("SELECT * FROM tag AS t
-								JOIN products_has_tag AS ptt 
-								ON t.id_tag = ptt.id_tag
-								");
+				include 'CIndex.php';
+				
+				$x = new CIndex();
+
+				$getTagsCloudArray = $x->GetTagsCloudsArray();
+				
+				/*
+				$sth = $dbh->prepare("SELECT * 
+										FROM (
+										SELECT id_tag, name_tag, COUNT(id_tag) AS TagsCount 
+										FROM products_has_tag
+										NATURAL JOIN tag
+										GROUP BY id_tag
+										) AS TagsCountQuery
+										ORDER BY TagsCount DESC
+										LIMIT 25");
 				$sth->execute();
 				$results = $sth->fetchAll();
+				
+				*/
+				
 							
 				echo '<form action="tag.php" method="POST"> 
 							<div class="form-inline">
 							<div class="form-group">';
 							
-				foreach($results as $result) 
+				foreach($getTagsCloudArray as $result) 
 				{
-						echo '<button name="name_tag" type="submit" class="btn btn-default" value="'.$result['name_tag'].'">'.$result['name_tag'].'</button>';
+						echo '<button id="'.$result->m_sTagsClass.'" name="name_tag" type="submit" class="btn btn-default" value="'.$result->m_sTagName.'">'.$result->m_sTagName.'</button>';
 				}
 							
 				echo '</div>
