@@ -12,56 +12,7 @@
         <link href="css/bootstrap.min.css" rel="stylesheet">
         <link href="css/main.css" rel="stylesheet">
         <link href="css/homepage.css" rel="stylesheet">
-		<script type="text/javascript" charset="utf-8">
-		
-	function setCookie(cname,cvalue,exdays) {
-		var d = new Date();
-		d.setTime(d.getTime() + (exdays*24*60*60*1000));
-		var expires = "expires=" + d.toGMTString();
-		document.cookie = cname+"="+cvalue+"; "+expires;
-	}
 
-	function getCookie(name)
-	{
-		var re = new RegExp(name + "=([^;]+)");
-		var value = re.exec(document.cookie);
-		return (value != null) ? unescape(value[1]) : null;
-	}
-
-	function checkCookie() {
-		var user=getCookie("username");
-		if (user != "") {
-			alert("Welcome again " + user);
-		} 	
-		else {
-				user = prompt("Please enter your name:","");
-				if (user != "" && user != null) {
-					setCookie("username", user, 30);
-				}
-			}
-	}
-
-
-	function usunCookie(nazwa) {                
-		var data = new Date();
-		data.setTime(date.getMonth()-1);
- 
-		document.cookie=nazwa + "=;expires=" + data.toGMTString();
-	}
-		
-		
-	function onloadFunction(){
-    	
-		if(window.location.href == "\sklep\item.php")
-		{
-			var name_product = document.getElementsByTagName("h1");
-			var id_product = document.getElementsByName("id_product");
-			setCookie(id_product,name_product,1);
-		}
-	}
-		
-	window.onload = onloadFunction; // wywołanie funkcji po przeładowaniu strony
-</script>
         <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
         <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
         <!--[if lt IE 9]>
