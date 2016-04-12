@@ -26,3 +26,60 @@
                 document.getElementById('my_search_form').submit();
             }
         </script>
+				<script type="text/javascript" charset="utf-8">
+		
+	function setCookie(cname,cvalue,exdays) {
+		var d = new Date();
+		d.setTime(d.getTime() + (exdays*24*60*60*1000));
+		var expires = "expires=" + d.toGMTString();
+		document.cookie = cname+"="+cvalue+"; "+expires;
+	}
+
+	function getCookie(name)
+	{
+		var re = new RegExp(name + "=([^;]+)");
+		var value = re.exec(document.cookie);
+		return (value != null) ? unescape(value[1]) : null;
+	}
+
+	function checkCookie() {
+		var user=getCookie("username");
+		if (user != "") {
+			alert("Welcome again " + user);
+		} 	
+		else {
+				user = prompt("Please enter your name:","");
+				if (user != "" && user != null) {
+					setCookie("username", user, 30);
+				}
+			}
+	}
+
+
+	function usunCookie(nazwa) {                
+		var data = new Date();
+		data.setTime(date.getMonth()-1);
+ 
+		document.cookie=nazwa + "=;expires=" + data.toGMTString();
+	}
+		
+		
+	function onloadFunction(){
+    	
+		if(window.location.href == "http://localhost/sklep/item.php")
+		{
+			var id_product = document.getElementsByName("id_product")[0].value;
+			var time_display = new Date();
+			// drugim argumentem będzie data oglądania produktu , żeby móc wstawiać rekomendacje powiązanych z produktów z aktualnie przeglądanymi
+			setCookie(id_product,time_display,1);
+		}
+		
+		if(window.location.href == "http://localhost/sklep/index.php")
+		{
+			alert("Cześć");
+		}
+		
+	}
+		
+	window.onload = onloadFunction; // wywołanie funkcji po przeładowaniu strony
+</script>
