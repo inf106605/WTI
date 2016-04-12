@@ -230,12 +230,14 @@
 						// splitowanie wyrazów z wykorzystaniem wyrażeń regularnych
 						$word_input_split = preg_split("/[\s,!@#$%^\-=<>{}?_+]/", $word_input_replaced);
 						
+						/*
 						echo "Słowo(a): ";
 						
 						foreach($word_input_split as $result)
 						{
 							echo $result.' ';
 						}
+						*/
 						
 						/*TAGI*/
 						
@@ -250,12 +252,14 @@
 						
 						$tags_input_split = preg_split("/[\s,!@#$%^\-=<>{}?_+]/", $tags_input_replaced);
 						
+						/*
 						echo "<br />Tagi: ";
 						
 						foreach($tags_input_split as $result)
 						{
 							echo $result.' ';
 						}
+						*/
 					
 						// wyszukiwanie rzeczowników w wynikach wyszukiwania z wykorzystaniem sjp.pl
 						/*
@@ -495,7 +499,10 @@
 							}
 						}
 						
+						/*
+						// wyświetlenie złożonego zapytania 
 						echo $command_query_advanced_search;
+						*/
 						
 						$sth = $dbh->prepare($command_query_advanced_search);
 						$sth->execute();
