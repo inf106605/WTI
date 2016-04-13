@@ -74,11 +74,6 @@
 			setCookie(id_product,time_display,1);
 		}
 		
-		if(window.location.href == "http://localhost/sklep/index.php")
-		{
-			alert("Cześć");
-		}
-		
 	}
 		
 	window.onload = onloadFunction; // wywołanie funkcji po przeładowaniu strony

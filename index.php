@@ -71,14 +71,59 @@
 						
 						// read cookies in php , generated in javascript
 						
-						// print_r($_COOKIE);
-						
 						try{
 						
-                        if (isset($POST['pole_szukaj'])) {
-																				
-							$sth = $dbh->prepare("SELECT * FROM Products WHERE name_product like ?");
-							$sth->execute(array('%:name_prod%'));
+                        if (isset($_COOKIE)) {
+							
+							$id_product[] = key($_COOKIE);
+						
+							while(next($_COOKIE))
+							{
+								$id_product[] = key($_COOKIE);
+							}
+							
+							array_pop($id_product); // ściągam ostatni element z tablicy ( domyślnie jest to PHPSSID )
+							
+							asort($id_product); // sortowanie tablicy
+							
+							/*
+							foreach($id_product as $result)
+							{
+								echo $result;
+							}
+							*/
+							
+							$command_query = "SELECT ptt.id_product FROM Products p
+												JOIN products_has_tag AS ptt ON 
+												p.id_product = ptt.id_product
+												JOIN tag AS t ON
+												t.id_tag = t.id_tag
+												WHERE ";
+							
+							$counter = 0;
+							
+							foreach($id_product as $result)
+							{
+								if($counter == 0)
+								{
+									$command_query .= "p.id_product = ".$result." ";
+								}
+								
+								else if($counter > 0)
+								{
+									$command_query .= "OR p.id_product = ".$result." ";
+								}
+								
+								$counter++;
+							}
+							
+							//$command_query .= "GROUP BY p.id_product";
+							
+							echo $command_query;
+							
+							$sth = $dbh->prepare($command_query);
+												
+							$sth->execute();
 							$results = $sth->fetchAll();
 						                           
 
@@ -97,7 +142,7 @@
                                         <img src="' . $result['photography'] . '" class="img-responsive" alt="">
                                     </div>
                                     <div class="caption">
-                                        <button>' . $result['name'] . '</button>
+                                        <button>' . $result['name_product'] . '</button>
                                         <span class="price">' . $result['price_brutto'] . '</span>
                                         <div class="description">' . $result['descriptions'] . '</div>
                                     </div>
