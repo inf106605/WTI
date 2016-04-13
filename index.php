@@ -93,45 +93,136 @@
 							}
 							*/
 							
-							$command_query = "SELECT ptt.id_product FROM Products p
+							$results = '';
+							
+							if(count($id_product) > 0)
+							{
+							
+								$command_query = "SELECT ptt.id_tag FROM Products p
 												JOIN products_has_tag AS ptt ON 
 												p.id_product = ptt.id_product
 												JOIN tag AS t ON
 												t.id_tag = t.id_tag
 												WHERE ";
 							
-							$counter = 0;
+								$counter = 0;
 							
-							foreach($id_product as $result)
-							{
-								if($counter == 0)
+								foreach($id_product as $result)
 								{
-									$command_query .= "p.id_product = ".$result." ";
+									if($counter == 0)
+									{
+										$command_query .= "p.id_product = ".$result." ";
+									}
+								
+									else if($counter > 0)
+									{
+										$command_query .= "OR p.id_product = ".$result." ";
+									}
+								
+									$counter++;
+								}
+							
+								$command_query .= " GROUP BY p.id_product LIMIT 25";
+							
+								$sth = $dbh->prepare($command_query);
+												
+								$sth->execute();
+								
+								$results = $sth->fetchAll();
+								
+								foreach($results as $result)
+								{
+									$id_tag[] = $result['id_tag'];
+									//echo $result['id_tag'];
 								}
 								
-								else if($counter > 0)
+								//echo "Przed: ".$command_query."<br/>";
+								
+								$command_query = ""; // wyczyszczenie zmiennej $command_query do ponownego użycia
+								
+								$command_query = "SELECT * FROM Products p
+												JOIN products_has_tag AS ptt ON 
+												p.id_product = ptt.id_product
+												JOIN tag AS t ON
+												t.id_tag = ptt.id_tag
+												WHERE ";
+								
+								$counter = 0;
+								
+								foreach($id_tag as $result)
 								{
-									$command_query .= "OR p.id_product = ".$result." ";
+									if($counter == 0)
+									{
+										$command_query .= "t.id_tag = ".$result." ";
+									}
+								
+									else if($counter > 0)
+									{
+										$command_query .= "OR t.id_tag = ".$result." ";
+									}
+								
+									$counter++;
 								}
 								
-								$counter++;
+								$command_query .= " GROUP BY t.id_tag LIMIT 3";
+								
+								//echo "<br/> Po: ".$command_query."<br />";
+								
+								$sth = $dbh->prepare($command_query);	
+								$sth->execute();
+							}
+							else{
+								
+								$sth = $dbh->prepare("SELECT * 
+										FROM (
+										SELECT id_tag, name_tag, COUNT(id_tag) AS TagsCount 
+										FROM products_has_tag
+										NATURAL JOIN tag
+										GROUP BY id_tag
+										) AS TagsCountQuery
+										ORDER BY TagsCount DESC
+										LIMIT 25");	
+								$sth->execute();
+								
+								$results = $sth->fetchAll();
+								
+								foreach($results as $result)
+								{
+									$id_tag[] = $result['id_tag'];
+								}
+								
+								$command_query = "SELECT * FROM
+													Products AS p 
+													JOIN products_has_tag AS ptt ON
+													p.id_product = ptt.id_product
+													JOIN tag AS t ON
+													t.id_tag = ptt.id_tag
+													WHERE";
+								$licznik = 0;
+								foreach($id_tag as $result)
+								{
+									if($licznik ==0 )
+									{
+										$command_query .= " t.id_tag = ".$result." ";
+									}
+									else if($licznik > 0)
+									{
+										$command_query .= " OR t.id_tag = ".$result." ";
+									}
+									$licznik++;
+								}
+								
+								$command_query .= " GROUP BY p.id_product LIMIT 3";
+								
+								$sth = $dbh->prepare($command_query);	
+								$sth->execute();
+								
 							}
 							
-							//$command_query .= "GROUP BY p.id_product";
-							
-							echo $command_query;
-							
-							$sth = $dbh->prepare($command_query);
-												
-							$sth->execute();
 							$results = $sth->fetchAll();
-						                           
-
-                             foreach($results as $result) { 
+                            
+							foreach($results as $result) { 
 							
-												
-                           
-
                                 echo '<form id="name_form" method="POST" action="item.php">';
                                 echo '<input name="id_product" type="text" style="display:none;" value="' . $result['id_product'] . '" />';
 
@@ -200,6 +291,91 @@
                         ?>
 
                     </div>
+					<h1>Ostatnio przeglądane produkty:</h1>
+                    <div class="row">
+					<?php
+					// read cookies in php , generated in javascript
+						
+						try{
+						
+                        if (isset($_COOKIE)){
+							
+							
+							$id_product[] = key($_COOKIE);
+						
+							while(next($_COOKIE))
+							{
+								$id_product[] = key($_COOKIE);
+							}
+							
+							array_pop($id_product); // ściągam ostatni element z tablicy ( domyślnie jest to PHPSSID )
+							
+							asort($id_product); // sortowanie tablicy
+							
+							$command_query = "SELECT * FROM Products
+												WHERE ";
+							
+								$counter = 0;
+							
+								foreach($id_product as $result)
+								{
+									if($counter == 0)
+									{
+										$command_query .= "id_product = ".$result." ";
+									}
+								
+									else if($counter > 0)
+									{
+										$command_query .= "OR id_product = ".$result." ";
+									}
+								
+									$counter++;
+								}
+							
+								$command_query .= " GROUP BY id_product LIMIT 3";
+							
+								//echo $command_query;
+							
+								$sth = $dbh->prepare($command_query);
+												
+								$sth->execute();
+								
+								$results = $sth->fetchAll();
+								
+								foreach($results as $result) { 
+							
+                                echo '<form id="name_form" method="POST" action="item.php">';
+                                echo '<input name="id_product" type="text" style="display:none;" value="' . $result['id_product'] . '" />';
+
+                                echo '
+                            <div class="col-sm-4">
+                                <div class="box">
+                                    <div class="image">
+                                        <img src="' . $result['photography'] . '" class="img-responsive" alt="">
+                                    </div>
+                                    <div class="caption">
+                                        <button>' . $result['name_product'] . '</button>
+                                        <span class="price">' . $result['price_brutto'] . '</span>
+                                        <div class="description">' . $result['descriptions'] . '</div>
+                                    </div>
+                                </div>
+                            </div>
+                        ';
+
+                                echo '</form>';
+                            }
+				
+							
+							
+							
+							
+						}
+						
+						}catch(Exception $e){
+							echo 'Error. '.$e;
+						}
+					?>
+					</div>
 
                 </div>
 
