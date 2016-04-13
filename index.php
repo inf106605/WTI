@@ -291,7 +291,14 @@
                         ?>
 
                     </div>
-					<h1>Ostatnio przeglądane produkty:</h1>
+					<?php
+					
+					if(count($_COOKIE) > 1)
+					{
+						echo '<h1>Ostatnio przeglądane produkty:</h1>';
+					}
+					
+					?>
                     <div class="row">
 					<?php
 					// read cookies in php , generated in javascript
