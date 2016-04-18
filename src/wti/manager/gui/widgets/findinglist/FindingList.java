@@ -141,6 +141,8 @@ public abstract class FindingList<T extends IHasId> extends Composite {
 	
 	public T getSelectedItem() {
 		int selectionIndex = list.getSelectionIndex();
+		if (selectionIndex == -1)
+			return null;
 		T selectedItem = input.get(selectionIndex);
 		return selectedItem;
 	}

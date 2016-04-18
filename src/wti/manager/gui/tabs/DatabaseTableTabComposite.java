@@ -45,6 +45,8 @@ public abstract class DatabaseTableTabComposite<T extends ITableRow<T>> extends 
 
 	private boolean onDataSelection() {
 		T data = findingList.getSelectedItem();
+		if (data == null)
+			return false;
 		boolean result = propertiesComposite.setData(data);
 		return result;
 	}
