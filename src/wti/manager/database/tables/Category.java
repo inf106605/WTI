@@ -24,7 +24,7 @@ public class Category implements INamedTableRow<Category> {
 	@Column(name = "name", nullable = false)
 	private String name = "";
 	
-	@Column(name = "descriptions", nullable = false)
+	@Column(name = "description2", nullable = false)
 	private String description = "";
 
 	

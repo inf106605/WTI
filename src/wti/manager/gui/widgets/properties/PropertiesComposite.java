@@ -197,9 +197,11 @@ public abstract class PropertiesComposite<T extends ICloneable<T>> extends Compo
 	}
 	
 	public boolean setData(T data) {
-		boolean newDataIsTheSameAsOld = originalData == null ? data == null : originalData.equals(data);
-		if (newDataIsTheSameAsOld && !newDataIsSaved())
-			return true;
+		if (!isNew) {
+			boolean newDataIsTheSameAsOld = originalData == null ? data == null : originalData.equals(data);
+			if (newDataIsTheSameAsOld && !newDataIsSaved())
+				return true;
+		}
 		if (areUnsavedChanges())
 			if (!askDiscardChanges())
 				return false;

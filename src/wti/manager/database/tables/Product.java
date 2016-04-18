@@ -75,7 +75,7 @@ public class Product implements INamedTableRow<Product> {
 	}
 	
 	public void setReadableDescription(String readableDescription) {
-		String description = readableDescription.replaceAll("\\R", " <br />\r\n");
+		String description = readableDescription.replaceAll("\\R", " <br/>\r\n");
 		this.description = description;
 	}
 	
