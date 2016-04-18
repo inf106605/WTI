@@ -42,7 +42,6 @@ COLLATE = utf8_unicode_ci;
 CREATE TABLE IF NOT EXISTS `testcs`.`category` (
   `id_category` INT(11) NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(50) CHARACTER SET 'utf8' NULL DEFAULT NULL,
-  `descriptions` TEXT CHARACTER SET 'utf8' NULL DEFAULT NULL,
   `description2` TEXT CHARACTER SET 'utf8' NULL DEFAULT NULL,
   PRIMARY KEY (`id_category`))
 ENGINE = InnoDB
@@ -82,6 +81,7 @@ CREATE TABLE IF NOT EXISTS `testcs`.`client` (
   `data_rejestracji` VARCHAR(45) CHARACTER SET 'utf8' NULL DEFAULT NULL,
   `surname` VARCHAR(50) CHARACTER SET 'utf8' NULL DEFAULT NULL,
   `privileges` INT(11) NULL DEFAULT NULL,
+  `date_last_logged` DATE NULL DEFAULT NULL,
   PRIMARY KEY (`id_client`),
   INDEX `id_adress` (`id_adress` ASC),
   INDEX `id_contact` (`id_contact` ASC),
@@ -156,7 +156,6 @@ CREATE TABLE IF NOT EXISTS `testcs`.`producer` (
   `regon` VARCHAR(50) CHARACTER SET 'utf8' NULL DEFAULT NULL,
   `nip` VARCHAR(50) CHARACTER SET 'utf8' NULL DEFAULT NULL,
   `telephone` VARCHAR(20) CHARACTER SET 'utf8' NULL DEFAULT NULL,
-  `description2` TEXT CHARACTER SET 'utf8' NULL DEFAULT NULL,
   PRIMARY KEY (`id_producer`))
 ENGINE = InnoDB
 AUTO_INCREMENT = 14
@@ -179,6 +178,7 @@ CREATE TABLE IF NOT EXISTS `testcs`.`products` (
   `percent_vat` DECIMAL(5,2) NULL DEFAULT NULL,
   `discount` DECIMAL(10,2) NULL DEFAULT NULL,
   `amount` INT(11) NULL DEFAULT NULL,
+  `data_add_products` DATE NULL DEFAULT NULL,
   PRIMARY KEY (`id_product`),
   INDEX `id_category` (`id_category` ASC),
   INDEX `id_producer` (`id_producer` ASC),
