@@ -16,7 +16,7 @@ import org.eclipse.swt.widgets.Shell;
 
 public class ProgressBarDialog<T> extends Dialog {
 
-	public interface ProgressBarRunnable<T> {
+	public static interface ProgressBarRunnable<T> {
 		public T run(AtomicBoolean canceling);
 	}
 	

@@ -7,7 +7,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 
 import wti.manager.gui.widgets.findinglist.FindingList;
-import wti.manager.gui.widgets.properties.PropertiesComposite;
+import wti.manager.gui.widgets.properties.BasePropertiesComposite;
 import wti.manager.interfaces.ITableRow;
 import wti.manager.utils.DatabaseException;
 import wti.manager.utils.ErrorMessages;
@@ -16,7 +16,7 @@ import wti.manager.utils.SessionUtils;
 public abstract class DatabaseTableTabComposite<T extends ITableRow<T>> extends Composite {
 
 	private FindingList<T> findingList;
-	private PropertiesComposite<T> propertiesComposite;
+	private BasePropertiesComposite<T> propertiesComposite;
 	
 	
 	public DatabaseTableTabComposite(Composite parent, int style) {
@@ -64,7 +64,7 @@ public abstract class DatabaseTableTabComposite<T extends ITableRow<T>> extends 
 		propertiesComposite.addDeleteListener(this::onDeleteData);
 	}
 	
-	protected abstract PropertiesComposite<T> createPropertiesCompositeItself(Composite parent, int style);
+	protected abstract BasePropertiesComposite<T> createPropertiesCompositeItself(Composite parent, int style);
 
 	private void onNewData() {
 		findingList.deselectAll();
