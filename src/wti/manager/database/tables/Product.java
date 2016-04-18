@@ -45,10 +45,6 @@ public class Product implements INamedTableRow<Product> {
 	public Product() {
 	}
 	
-	public Product(String name) {
-		this.name = name;
-	}
-	
 	public int getId() {
 		return id;
 	}
