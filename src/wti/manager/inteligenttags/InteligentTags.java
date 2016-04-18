@@ -1,11 +1,10 @@
 package wti.manager.inteligenttags;
 
-import static java.lang.System.out;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.eclipse.swt.SWT;
 import org.jsoup.Jsoup;
@@ -16,6 +15,7 @@ import wti.manager.database.tables.Product;
 import wti.manager.database.tables.Tag;
 import wti.manager.gui.dialogs.edittags.EditTagsDialog;
 import wti.manager.gui.dialogs.edittags.ProposedTag;
+import wti.manager.gui.dialogs.progressbar.ProgressBarDialog;
 import wti.manager.utils.DatabaseException;
 import wti.manager.utils.SessionUtils;
 import wti.manager.utils.Utils;
@@ -23,13 +23,22 @@ import wti.manager.utils.Utils;
 public class InteligentTags {
 
 	public static void refreshTags(Product product) {
-		String description = product.getReadableDescription();
-		List<String> ListOfTags = new ArrayList<String>();
-        
-		description = description.replaceAll("[,.]", ""); //usuniêcie zbêdnych znaków
-		String []wyrazyPrzed = description.split(" ");
-	
-		ListOfTags = findTags(deleteStopwords(wyrazyPrzed));
+		ProgressBarDialog<List<String>> progressBarDialog = new ProgressBarDialog<List<String>>(Utils.getShell(), SWT.TITLE | SWT.BORDER | SWT.APPLICATION_MODAL);
+		progressBarDialog.setText("Wyszukiwanie tagów");
+		progressBarDialog.setDescription("Automatyczne dopasowywanie tagów na podstawie opisu produktu,\nprzy u¿yciu inteligentnego algorytmu.");
+		boolean canceled = progressBarDialog.open((AtomicBoolean closing) -> {
+				String description = product.getReadableDescription();
+				List<String> ListOfTags2 = new ArrayList<String>();
+		        
+				description = description.replaceAll("[,.]", ""); //usuniêcie zbêdnych znaków
+				String []wyrazyPrzed = description.split(" ");
+			
+				ListOfTags2 = findTags(deleteStopwords(wyrazyPrzed));
+				return ListOfTags2;
+			});
+		if (canceled)
+			return;
+		List<String> ListOfTags = progressBarDialog.getResult();
 	
 	//	ListOfTags.
 		/*
