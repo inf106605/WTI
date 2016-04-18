@@ -178,7 +178,7 @@ CREATE TABLE IF NOT EXISTS `testcs`.`products` (
   `percent_vat` DECIMAL(5,2) NULL DEFAULT NULL,
   `discount` DECIMAL(10,2) NULL DEFAULT NULL,
   `amount` INT(11) NULL DEFAULT NULL,
-  `data_add_products` DATE NULL DEFAULT NULL,
+  `date_add_products` DATE NULL,
   PRIMARY KEY (`id_product`),
   INDEX `id_category` (`id_category` ASC),
   INDEX `id_producer` (`id_producer` ASC),
