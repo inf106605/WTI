@@ -15,6 +15,7 @@ import org.eclipse.swt.widgets.TabItem;
 import wti.manager.gui.images.Images;
 import wti.manager.gui.images.Images.IMAGES;
 import wti.manager.gui.tabs.DatabaseTableTabComposite;
+import wti.manager.gui.tabs.categories.CategoriesComposite;
 import wti.manager.gui.tabs.products.ProductsComposite;
 import wti.manager.gui.tabs.tags.TagsComposite;
 
@@ -78,6 +79,7 @@ public class MainWindow {
 
 	private void createTabs() {
 		createTabTags();
+		createTabCategories();
 		createTabProducts();
 	}
 
@@ -86,6 +88,13 @@ public class MainWindow {
 		tbtmTags.setText("Tagi");
 		TagsComposite tagsComposite = new TagsComposite(tabFolder, SWT.NONE);
 		tbtmTags.setControl(tagsComposite);
+	}
+	
+	private void createTabCategories() {
+		TabItem tbtmCategories = new TabItem(tabFolder, SWT.NONE);
+		tbtmCategories.setText("Kategorie");
+		CategoriesComposite categoriesComposite = new CategoriesComposite(tabFolder, SWT.NONE);
+		tbtmCategories.setControl(categoriesComposite);
 	}
 
 	private void createTabProducts() {

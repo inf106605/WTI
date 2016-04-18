@@ -223,8 +223,8 @@ public abstract class PropertiesComposite<T extends ICloneable<T>> extends Compo
 			setEditable(true);
 			btnDelete.setEnabled(true);
 		}
-		setUnchanged();
 		isNew = false;
+		setUnchanged();
 		return true;
 	}
 	
@@ -254,7 +254,7 @@ public abstract class PropertiesComposite<T extends ICloneable<T>> extends Compo
 	
 	private void setChangesButtonsEnabled(boolean enabled) {
 		btnSave.setEnabled(enabled);
-		btnUndo.setEnabled(enabled);
+		btnUndo.setEnabled(enabled || isNew);
 	}
 
 	public boolean areUnsavedChanges() {
