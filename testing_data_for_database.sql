@@ -43,19 +43,18 @@ INSERT INTO `category` (`id_category`, `name`, `description2`) VALUES
 (18, 'Akcesoria rowerowe', 'Niezależnie od tego, czy rower wykorzystuje się w celach rekreacyjnych, sportowych, czy też jako środek do codziennego transportu, niezwykle istotne jest, aby posiadać do niego odpowiednie akcesoria. Tylko właściwie dobrane oraz solidne akcesoria rowerowe pozwolą bowiem w bezpieczny oraz komfortowy sposób przemierzać każdego rodzaju trasę. W obecnych czasach, producenci z branży rowerowej oferują tak ogromny repertuar produktów, że nie jeden pasjonat jednośladów może mieć trudności z ich optymalnym wyborem. Dlatego też, gdy zamierza się zakupić akcesoria do roweru, warto zdać się na pomoc ekspertów, którzy doradzą oraz podpowiedzą najlepsze rozwiązania, dopasowane do indywidualnych oczekiwań oraz predyspozycji finansowych danej osoby. O szerokim wyborze dostępnych współcześnie akcesoriów do rowerów, jak również o wartości profesjonalnej pomocy przy ich wyborze, przekonali się z pewnością wszyscy Klienci naszego sklepu. Zarówno w sprzedaży internetowej, jak również w naszej siedzibie w Poznaniu, udostępniamy niezwykle duży wybór różnego rodzaju artykułów rowerowych. Znajdują się tam akcesoria wpływające na bezpieczeństwo jazdy, poprawiające jej komfort czy czyniące podróżowanie rowerem jeszcze bardziej atrakcyjnym. Klientom oferujemy między innymi profesjonalne oświetlenie, foteliki dziecięce bądź też dzwonki. Osoby pragnące poprawić wygodę jazdy, zaopatrzyć się mogą w specjalne siodełka, koszyki lub sakwy. Natomiast takie akcesoria do roweru, jak nowoczesne liczniki dadzą możliwość lepszego kontrolowania tras przemierzanych rowerem. Tym co doceniają nasi Klienci jest jednakże nie tylko szeroki asortyment, jaki przedstawiamy. Każdy specjalista z teamu Bikefun zaoferować może bowiem profesjonalne wsparcie przy zakupie akcesoriów, które zostaną dobrane idealnie do wymagań konkretnego Klienta');
 
 --
--- Zrzut danych tabeli `client`
---
-
-INSERT INTO `client` (`id_client`, `id_adress`, `id_contact`, `user_login`, `md5_pass`, `name`, `nip`, `client_type`, `data_rejestracji`, `surname`, `privileges`, `date_last_logged`) VALUES
-(17, 41, 38, 'krzysiek1994', '1104664a4ca7228f15510279577393ef', 'Jerzyński', '', 'standard', '2016-04-18 13:14:59', 'Krzysztof', 1, '2016-04-18');
-
---
 -- Zrzut danych tabeli `contact`
 --
 
 INSERT INTO `contact` (`id_contact`, `number_telephone`, `fax`, `email`, `site`) VALUES
 (38, '+48 232 122 221', '', 'wti@wti.pl', 'http://www.wp.pl');
 
+--
+-- Zrzut danych tabeli `client`
+--
+
+INSERT INTO `client` (`id_client`, `id_adress`, `id_contact`, `user_login`, `md5_pass`, `name`, `nip`, `client_type`, `data_rejestracji`, `surname`, `privileges`, `date_last_logged`) VALUES
+(17, 41, 38, 'krzysiek1994', '1104664a4ca7228f15510279577393ef', 'Jerzyński', '', 'standard', '2016-04-18 13:14:59', 'Krzysztof', 1, '2016-04-18');
 --
 -- Zrzut danych tabeli `orders`
 --
@@ -92,25 +91,6 @@ INSERT INTO `products` (`id_product`, `id_category`, `id_producer`, `name_produc
 (8, 15, 25, 'Kross Moon 3.0 2016', 'Rama 	Aluminium Super Lite <br />\r\nWidelec 	RockShox Recon Silver Solo Air (skok 130mm, stożkowa rura sterowa główka, QR15)<br />\r\nTylny amortyzator 	-<br />\r\nIlość biegów 	27<br />\r\nPrzerzutka przód 	Shimano Acera FD-M3000<br />\r\nPrzerzutka tył 	Shimano Alivio RD-M4000<br />\r\nHamulec przód 	Avid DB1 (hydrauliczny, tarcza 180mm)<br />\r\nHamulec tył 	Avid DB1 (hydrauliczny, tarcza 180mm)<br />\r\nDźwignie hamulca 	Avid DB1<br />\r\nManetki 	Shimano Altus SL-M370, 9 biegów<br />\r\nKorby 	Suntour XCM410 40/30/22T<br />\r\nŁańcuch 	Shimano CN-HG53<br />\r\nKaseta / Wolnobieg 	Shimano Alivio CS-HG300-9 12-36T<br />\r\nPiasta przód 	Shimano Deore HB-M618 15x100mm<br />\r\nPiasta tył 	Shimano Deore FH-M618 12x142mm<br />\r\nOpony 	Shwalbe Nobby Nic Performance 27,5"x2,25<br />\r\nObręcze 	WTB STP i23 27,5" Tubeless Ready<br />\r\nKierownica 	Kross Racing Components (Aluminium, niski wznios 760mm 35mm)<br />\r\nWspornik kierownicy 	Kross Racing Components (Aluminium, ahead, 35mm)<br />\r\nWspornik siodła 	Kross Racing Components (Aluminium, 30,9mm)<br />\r\nStery 	VP A45AC3 pół- zintegrowane<br />\r\nSiodło 	Kross VL-1489<br />\r\nChwyty 	Kross<br />\r\nPedały 	-<br />\r\nWaga 	13.6<br />\r\nUwagi 	-<br />', 'img/kross-moon-30.jpg', '14500.00', '17690.00', '22.00', '0.00', 20, '2016-04-11');
 
 --
--- Zrzut danych tabeli `products_has_tag`
---
-
-INSERT INTO `products_has_tag` (`id_product`, `id_tag`) VALUES
-(6, 3),
-(6, 7),
-(6, 8),
-(6, 11),
-(7, 1),
-(7, 9),
-(7, 10),
-(7, 11),
-(8, 1),
-(8, 2),
-(8, 4),
-(8, 12),
-(8, 13);
-
---
 -- Zrzut danych tabeli `tag`
 --
 
@@ -128,6 +108,25 @@ INSERT INTO `tag` (`id_tag`, `name_tag`) VALUES
 (11, 'Shimano'),
 (12, 'SPD M520'),
 (13, 'Tornado');
+
+--
+-- Zrzut danych tabeli `products_has_tag`
+--
+
+INSERT INTO `products_has_tag` (`id_product`, `id_tag`) VALUES
+(6, 3),
+(6, 7),
+(6, 8),
+(6, 11),
+(7, 1),
+(7, 9),
+(7, 10),
+(7, 11),
+(8, 1),
+(8, 2),
+(8, 4),
+(8, 12),
+(8, 13);
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
