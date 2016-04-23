@@ -3,6 +3,10 @@ package wti.manager.inteligenttags;
 import static java.lang.System.out;
 
 import java.io.IOException;
+import java.io.BufferedReader;
+import java.util.ArrayList;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -71,6 +75,7 @@ public class InteligentTags {
 					}
 				}
 			}
+			
 	}
 	
 	private static List<String> deleteStopwords(String[] wordsBefore)
