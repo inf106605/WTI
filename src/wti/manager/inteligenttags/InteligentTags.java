@@ -1,17 +1,12 @@
 package wti.manager.inteligenttags;
 
-import static java.lang.System.out;
-
 import java.io.IOException;
-import java.io.BufferedReader;
-import java.util.ArrayList;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.Set;
-
+import static java.lang.System.*;
 import org.eclipse.swt.SWT;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -21,6 +16,7 @@ import wti.manager.database.tables.Product;
 import wti.manager.database.tables.Tag;
 import wti.manager.gui.dialogs.edittags.EditTagsDialog;
 import wti.manager.gui.dialogs.edittags.ProposedTag;
+import wti.manager.gui.dialogs.progressbar.ProgressBarDialog;
 import wti.manager.utils.DatabaseException;
 import wti.manager.utils.SessionUtils;
 import wti.manager.utils.Utils;
@@ -28,26 +24,39 @@ import wti.manager.utils.Utils;
 public class InteligentTags {
 
 	public static void refreshTags(Product product) {
-		String description = product.getReadableDescription();
-		List<String> ListOfTags = new ArrayList<String>();
-        
-		description = description.replaceAll("[,.]", "");
-		String []wordsbefore = description.split(" ");
-	
-		ListOfTags = findTags(deleteStopwords(wordsbefore));
+		
+		ProgressBarDialog<List<String>> progressBarDialog = new ProgressBarDialog<List<String>>(Utils.getShell(), SWT.TITLE | SWT.BORDER | SWT.APPLICATION_MODAL);
+		progressBarDialog.setText("Wyszukiwanie tagów");
+		progressBarDialog.setDescription("Automatyczne dopasowywanie tagów na podstawie opisu produktu,\nprzy u¿yciu inteligentnego algorytmu.");
+		boolean canceled = progressBarDialog.open((AtomicBoolean closing) -> 
+		{
+			String description = product.getReadableDescription();
+			description = description.replaceAll("[,.]", "");
+			String []wordsbefore = description.split(" ");
+			
+			List<String> ListOfTags2 = new ArrayList<String>();
+		    
+			ListOfTags2 = findTags(deleteStopwords(wordsbefore));
+			return ListOfTags2;
+		});
+		
+		if (canceled)
+			return;
+		
+		List<String> ListOfTagsFromDescription = progressBarDialog.getResult(); //return value from progressBar-code
 	
 		List<ProposedTag> proposedTags = new LinkedList<ProposedTag>();
-		Set<Tag> tagProductSet = product.getTags();
+		Set<Tag> tagFromProductSet = product.getTags();
 		List<String> listToDisplay = new ArrayList<>();
 		
-		for(Tag item : tagProductSet) //tag to new list from product 
+		for(Tag item : tagFromProductSet) //tag to new list from product 
 		{
 			listToDisplay.add(item.getName());
 			proposedTags.add(new ProposedTag(item.getName(), null, true));
 		}
 		
 		//add only new tag to list
-		for(String el : ListOfTags) 
+		for(String el : ListOfTagsFromDescription) 
 		{
 			if(!listToDisplay.contains(el))
 			{
@@ -55,6 +64,7 @@ public class InteligentTags {
 				proposedTags.add(new ProposedTag(el, null, false));
 			}
 		}
+		
 		EditTagsDialog editTagsDialog = new EditTagsDialog(Utils.getShell(), SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL, proposedTags);
 		if (!editTagsDialog.open())
 			return; //Cancel
@@ -77,6 +87,7 @@ public class InteligentTags {
 			}
 			
 	}
+	
 	
 	private static List<String> deleteStopwords(String[] wordsBefore)
 	{
@@ -108,12 +119,12 @@ public class InteligentTags {
 		return words; 
 	}
 	
-	private static List<String> findTags(List<String> wyrazy)
+	private static List<String> findTags(List<String> words)
 	{
 		Document doc = null;
 		List<String> ListOfTags = new ArrayList<String>();
 		
-		for (String wordFromDescription : wyrazy) 
+		for (String wordFromDescription : words) 
 		{
 			try 
 			{
@@ -133,7 +144,7 @@ public class InteligentTags {
 			} catch (IOException e) 
 			{
 				out.println("InteligenTags error: SJP. Return default words from input.");
-				ListOfTags.addAll(wyrazy);
+				ListOfTags.addAll(words);
 				//e.printStackTrace();
 			}
 			
@@ -170,6 +181,7 @@ public class InteligentTags {
 		return ListOfTags;
 	}
 	
+	@SuppressWarnings("unused")
 	private static List<Tag> createNewTagsFromNames(Iterable<String> newTagNames) throws DatabaseException {
 		List<Tag> newTags = new LinkedList<Tag>();
 		for (String newTagName : newTagNames) {

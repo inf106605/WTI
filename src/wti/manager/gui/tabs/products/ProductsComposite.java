@@ -5,7 +5,7 @@ import org.eclipse.swt.widgets.Composite;
 import wti.manager.database.tables.Product;
 import wti.manager.gui.tabs.DatabaseTableTabComposite;
 import wti.manager.gui.widgets.findinglist.FindingList;
-import wti.manager.gui.widgets.properties.PropertiesComposite;
+import wti.manager.gui.widgets.properties.BasePropertiesComposite;
 
 public class ProductsComposite extends DatabaseTableTabComposite<Product> {
 
@@ -19,7 +19,7 @@ public class ProductsComposite extends DatabaseTableTabComposite<Product> {
 	}
 
 	@Override
-	protected PropertiesComposite<Product> createPropertiesCompositeItself(Composite parent, int style) {
+	protected BasePropertiesComposite<Product> createPropertiesCompositeItself(Composite parent, int style) {
 		return new ProductPropertiesComposite(parent, style);
 	}
 

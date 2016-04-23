@@ -5,23 +5,19 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.List;
-import org.eclipse.swt.widgets.Text;
 
 import wti.manager.database.tables.Product;
 import wti.manager.database.tables.Tag;
-import wti.manager.gui.widgets.properties.PropertiesComposite;
+import wti.manager.gui.widgets.properties.AbstractPropertiesComposite;
 import wti.manager.gui.widgets.readonlylist.ReadOnlyList;
 import wti.manager.inteligenttags.InteligentTags;
 
-import org.eclipse.swt.widgets.Button;
-
-public class ProductPropertiesComposite extends PropertiesComposite<Product> {
+public class ProductPropertiesComposite extends AbstractPropertiesComposite<Product> {
 	
-	private Text textName;
-	private Text textDescription;
 	private List listTags;
 	private Button btnEditTags;
 	
@@ -32,66 +28,11 @@ public class ProductPropertiesComposite extends PropertiesComposite<Product> {
 
 	@Override
 	protected void createCompositeProperties() {
-		Composite compositeProperties = createCompositePropertiesItself();
-		createNameControls(compositeProperties);
-		createDescriptionControls(compositeProperties);
+		super.createCompositeProperties();
+		Composite compositeProperties = createCompositePropertiesItself(3);
+		createTextColumnControls(compositeProperties, "Nazwa", false, Product::getName, Product::setName);
+		createTextColumnControls(compositeProperties, "Opis", true, Product::getDescription, Product::setDescription);
 		createTagsControls(compositeProperties);
-	}
-
-	private Composite createCompositePropertiesItself() {
-		Composite compositeProperties = new Composite(this, SWT.NONE);
-		GridLayout gl_compositeProperties = new GridLayout(2, false);
-		gl_compositeProperties.marginWidth = 0;
-		gl_compositeProperties.marginHeight = 0;
-		compositeProperties.setLayout(gl_compositeProperties);
-		compositeProperties.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		return compositeProperties;
-	}
-
-	private void createNameControls(Composite compositeProperties) {
-		createLabelName(compositeProperties);
-		createTextName(compositeProperties);
-	}
-
-	private void createLabelName(Composite compositeProperties) {
-		Label lblName = new Label(compositeProperties, SWT.NONE);
-		lblName.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblName.setText("Nazwa");
-	}
-
-	private void createTextName(Composite compositeProperties) {
-		textName = new Text(compositeProperties, SWT.BORDER);
-		textName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		textName.addModifyListener((event) -> onModifyName());
-	}
-	
-	private void onModifyName() {
-		String name = textName.getText();
-		data.setName(name);
-		setChanged();
-	}
-
-	private void createDescriptionControls(Composite compositeProperties) {
-		createLabelDescription(compositeProperties);
-		createTextDescription(compositeProperties);
-	}
-
-	private void createLabelDescription(Composite compositeProperties) {
-		Label lblDescription = new Label(compositeProperties, SWT.NONE);
-		lblDescription.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblDescription.setText("Opis");
-	}
-
-	private void createTextDescription(Composite compositeProperties) {
-		textDescription = new Text(compositeProperties, SWT.BORDER | SWT.WRAP | SWT.V_SCROLL | SWT.MULTI);
-		textDescription.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		textDescription.addModifyListener((event) -> onModifyDescription());
-	}
-	
-	private void onModifyDescription() {
-		String description = textDescription.getText();
-		data.setReadableDescription(description);
-		setChanged();
 	}
 
 	private void createTagsControls(Composite compositeProperties) {
@@ -150,15 +91,13 @@ public class ProductPropertiesComposite extends PropertiesComposite<Product> {
 
 	@Override
 	protected void clearProperties() {
-		textName.setText("");
-		textDescription.setText("");
+		super.clearProperties();
 		listTags.removeAll();
 	}
 
 	@Override
 	protected void refreshProperties() {
-		textName.setText(data.getName());
-		textDescription.setText(data.getReadableDescription());
+		super.refreshProperties();
 		fillListTags();
 	}
 	
@@ -170,8 +109,7 @@ public class ProductPropertiesComposite extends PropertiesComposite<Product> {
 
 	@Override
 	protected void setEditable(boolean editable) {
-		textName.setEditable(editable);
-		textDescription.setEditable(editable);
+		super.setEditable(editable);
 		listTags.setEnabled(editable);
 		btnEditTags.setEnabled(editable);
 	}

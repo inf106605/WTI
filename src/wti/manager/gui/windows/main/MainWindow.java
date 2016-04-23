@@ -15,6 +15,8 @@ import org.eclipse.swt.widgets.TabItem;
 import wti.manager.gui.images.Images;
 import wti.manager.gui.images.Images.IMAGES;
 import wti.manager.gui.tabs.DatabaseTableTabComposite;
+import wti.manager.gui.tabs.categories.CategoriesComposite;
+import wti.manager.gui.tabs.producers.ProducersComposite;
 import wti.manager.gui.tabs.products.ProductsComposite;
 import wti.manager.gui.tabs.tags.TagsComposite;
 
@@ -77,22 +79,16 @@ public class MainWindow {
 	}
 
 	private void createTabs() {
-		createTabTags();
-		createTabProducts();
+		createTab("Tagi", new TagsComposite(tabFolder, SWT.NONE));
+		createTab("Kategorie", new CategoriesComposite(tabFolder, SWT.NONE));
+		createTab("Producenci", new ProducersComposite(tabFolder, SWT.NONE));
+		createTab("Produkty", new ProductsComposite(tabFolder, SWT.NONE));
 	}
 
-	private void createTabTags() {
+	private void createTab(String name, Composite tabComposite) {
 		TabItem tbtmTags = new TabItem(tabFolder, SWT.NONE);
-		tbtmTags.setText("Tagi");
-		TagsComposite tagsComposite = new TagsComposite(tabFolder, SWT.NONE);
-		tbtmTags.setControl(tagsComposite);
-	}
-
-	private void createTabProducts() {
-		TabItem tbtmProducts = new TabItem(tabFolder, SWT.NONE);
-		tbtmProducts.setText("Produkty");
-		ProductsComposite productsComposite = new ProductsComposite(tabFolder, SWT.NONE);
-		tbtmProducts.setControl(productsComposite);
+		tbtmTags.setText(name);
+		tbtmTags.setControl(tabComposite);
 	}
 
 	private void openShell(Shell shell) {

@@ -14,7 +14,7 @@ import org.eclipse.swt.widgets.MessageBox;
 
 import wti.manager.interfaces.ICloneable;
 
-public abstract class PropertiesComposite<T extends ICloneable<T>> extends Composite {
+public abstract class BasePropertiesComposite<T extends ICloneable<T>> extends Composite {
 
 	public static interface INewListener {
 		public void onNew();
@@ -43,7 +43,7 @@ public abstract class PropertiesComposite<T extends ICloneable<T>> extends Compo
 	private Button btnDelete;
 	
 	
-	public PropertiesComposite(Composite parent, int style, T emptyData) {
+	public BasePropertiesComposite(Composite parent, int style, T emptyData) {
 		super(parent, style);
 		this.emptyData = emptyData;
 		setLayout();
@@ -197,9 +197,11 @@ public abstract class PropertiesComposite<T extends ICloneable<T>> extends Compo
 	}
 	
 	public boolean setData(T data) {
-		boolean newDataIsTheSameAsOld = originalData == null ? data == null : originalData.equals(data);
-		if (newDataIsTheSameAsOld && !newDataIsSaved())
-			return true;
+		if (!isNew) {
+			boolean newDataIsTheSameAsOld = originalData == null ? data == null : originalData.equals(data);
+			if (newDataIsTheSameAsOld && !newDataIsSaved())
+				return true;
+		}
 		if (areUnsavedChanges())
 			if (!askDiscardChanges())
 				return false;
@@ -223,8 +225,8 @@ public abstract class PropertiesComposite<T extends ICloneable<T>> extends Compo
 			setEditable(true);
 			btnDelete.setEnabled(true);
 		}
-		setUnchanged();
 		isNew = false;
+		setUnchanged();
 		return true;
 	}
 	
@@ -254,7 +256,7 @@ public abstract class PropertiesComposite<T extends ICloneable<T>> extends Compo
 	
 	private void setChangesButtonsEnabled(boolean enabled) {
 		btnSave.setEnabled(enabled);
-		btnUndo.setEnabled(enabled);
+		btnUndo.setEnabled(enabled || isNew);
 	}
 
 	public boolean areUnsavedChanges() {

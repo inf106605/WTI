@@ -1,26 +1,27 @@
-package wti.manager.gui.tabs.tags;
+package wti.manager.gui.tabs.categories;
 
 import org.eclipse.swt.widgets.Composite;
 
-import wti.manager.database.tables.Tag;
+import wti.manager.database.tables.Category;
 import wti.manager.gui.widgets.properties.AbstractPropertiesComposite;
 
-public class TagPropertiesComposite extends AbstractPropertiesComposite<Tag> {
+public class CategoryPropertiesComposite extends AbstractPropertiesComposite<Category> {
 	
-	public TagPropertiesComposite(Composite parent, int style) {
-		super(parent, style, new Tag());
+	public CategoryPropertiesComposite(Composite parent, int style) {
+		super(parent, style, new Category());
 	}
 
 	@Override
 	protected void createCompositeProperties() {
 		super.createCompositeProperties();
 		Composite compositeProperties = createCompositePropertiesItself();
-		createTextColumnControls(compositeProperties, "Nazwa", false, Tag::getName, Tag::setName);
+		createTextColumnControls(compositeProperties, "Nazwa", false, Category::getName, Category::setName);
+		createTextColumnControls(compositeProperties, "Opis", true, Category::getDescription, Category::setDescription);
 	}
 
 	@Override
 	protected String getDataName() {
-		return "Tag";
+		return "Kategoria";
 	}
 	
 	@Override
