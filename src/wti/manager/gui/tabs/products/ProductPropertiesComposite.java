@@ -31,7 +31,7 @@ public class ProductPropertiesComposite extends AbstractPropertiesComposite<Prod
 		super.createCompositeProperties();
 		Composite compositeProperties = createCompositePropertiesItself(3);
 		createTextColumnControls(compositeProperties, "Nazwa", false, Product::getName, Product::setName);
-		createTextColumnControls(compositeProperties, "Opis", true, Product::getDescription, Product::setDescription);
+		createTextColumnControls(compositeProperties, "Opis", true, Product::getReadableDescription, Product::setReadableDescription);
 		createTagsControls(compositeProperties);
 	}
 
