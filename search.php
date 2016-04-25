@@ -94,7 +94,7 @@
 							$sth = $dbh->prepare("SELECT * FROM Products p
 									 INNER JOIN Category c
 									 ON c.id_category = p.id_category
-									 WHERE c.id_category = :id_cat");
+									 WHERE c.id_category = :id_cat AND p.amount > 0");
 							$var = $_POST['id_category'];
 							$sth->execute(array(':id_cat' => $var));
 							$results = $sth->fetchAll();
