@@ -181,10 +181,40 @@ if (isset($_SESSION['user']) && isset($_POST['id_client']) && isset($_POST['id_o
 
         $temp_amount = $_POST['amount_product'][$licznik];
         $temp_id_product = $_POST['id_product'][$licznik];
+		$temp_product_name = '';
+		$all_amount_product = '';
+		
+		$sth = $dbh->prepare("SELECT * FROM Products
+		WHERE id_product = ?");
+		$sth->execute(array($temp_id_product));
+		$results = $sth->fetchAll();
+		
+		foreach($results as $result){
+			
+			$all_amount_product = $result['amount'];
+			$temp_product_name = $result['name_product'];
+		}
+		
+		$difference_amount = $all_amount_product - $temp_amount;
+		
+		if($difference_amount >= 0)
+		{
+			$statement = $dbh->prepare("UPDATE Products SET amount = ? WHERE id_product = ?");
+			if($statement->execute(array($difference_amount, $temp_id_product)));
+			else echo "Eror: UPDATE OrdersProducts SET amount ...";
+			
+			$statement = $dbh->prepare("UPDATE OrdersProducts SET amount_products = ? WHERE id_order = ? AND id_product = ?");
+			if($statement->execute(array($temp_amount, $id_order, $temp_id_product)));
+			else echo "Eror: UPDATE OrdersProducts SET amount_products ...";
+		}
+		
+		else
+		{
+			 echo 'Nie ma aż tylu egzemplarzy produktu '.$temp_product_name.' na stanie!';
+			 echo '<script>setTimeout(function(){location.href="orders_preview.php", 3000} );</script>';
+			 die();
+		}
 
-		$statement = $dbh->prepare("UPDATE OrdersProducts SET amount_products = ? WHERE id_order = ? AND id_product = ?");
-		if($statement->execute(array($temp_amount, $id_order, $temp_id_product)));
-		else echo "Eror: UPDATE OrdersProducts SET amount_products ...";
     }
 
 	$sth = $dbh->prepare("SELECT * FROM Client AS c 
