@@ -172,7 +172,7 @@ CREATE TABLE IF NOT EXISTS `testcs`.`products` (
   `id_producer` INT(11) NULL DEFAULT NULL,
   `name_product` VARCHAR(255) CHARACTER SET 'utf8' NOT NULL,
   `descriptions` TEXT CHARACTER SET 'utf8' NULL DEFAULT NULL,
-  `photography` VARCHAR(255) CHARACTER SET 'utf8' NULL DEFAULT NULL,
+  `photography` VARCHAR(255) CHARACTER SET 'utf8' NULL,
   `price_netto` DECIMAL(10,2) NULL DEFAULT NULL,
   `price_brutto` DECIMAL(10,2) NULL DEFAULT NULL,
   `percent_vat` DECIMAL(5,2) NULL DEFAULT NULL,
@@ -217,7 +217,7 @@ COLLATE = utf8_unicode_ci;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `testcs`.`tag` (
   `id_tag` INT(11) NOT NULL AUTO_INCREMENT,
-  `name_tag` VARCHAR(45) NULL,
+  `name_tag` VARCHAR(45) CHARACTER SET 'utf8' NULL,
   PRIMARY KEY (`id_tag`),
   UNIQUE INDEX `id_tag_UNIQUE` (`id_tag` ASC),
   UNIQUE INDEX `name_UNIQUE` (`name_tag` ASC))

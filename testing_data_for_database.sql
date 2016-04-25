@@ -102,7 +102,7 @@ INSERT INTO `tag` (`id_tag`, `name_tag`) VALUES
 (4, 'Moon 3.0'),
 (5, 'najlepsze_rowery'),
 (6, 'okazja'),
-(7, 'peda?y'),
+(7, 'pedały'),
 (8, 'pompka'),
 (9, 'rower'),
 (10, 'Shimano'),
