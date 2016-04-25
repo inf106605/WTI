@@ -32,8 +32,6 @@
 		
 		
 		});
-		
-		
     </script>
 	
 	
@@ -71,27 +69,31 @@
 							$orders[] = $result['id_order'];
 							$id_client = $result['id_client'];
 						}
-						
-                        echo '<div class="col-sm-12"><h1>Twoje zamówienia:</h1></div>';
 
+
+						echo '<div class="col-sm-12"><h1>Twoje zamówienia:</h1></div>
+						<form id="name_form" method="POST" action="factures.php">
+						<div class="col-sm-12">
+                        <table class="table">
+                            <thead>
+                              <tr>
+                                <th>ID Zamówienia</th>
+                                <th>Zamówienie</th>
+                              </tr>
+                            </thead>
+                            <tbody>';
+ 
                         $ile = count($orders);
-
                         for ($j = 1; $j < $ile - 1; $j++) {
-
-                            echo '
-                            
-                            <div class="col-sm-4">
-                                <form id="name_form" method="POST" action="factures.php">
-                                    <div class="box"> 
-                                        <div>Zamowienie nr ' . $orders[$j] . '</div>
-                                        <button name="id_orders" value="' . $orders[$j] . '" type="submit" class="btn btn-default big-button">Zobacz zamówienie</button>
-                                    </div>
-                                </form>				
-                            </div>
-                            
-                            ';
-                        }
+                                echo '<tr><td>' . $orders[$j] . '</td>';
+                                echo '<td><button name="id_orders" value="' . $orders[$j] . '" type="submit" class="btn btn-default small-button">Zobacz zamówienie</button></td>';
+                            }
+                        echo '</tbody>
+                        </table>
+						</form>
+						</div>';
 						
+                       						
 						// przycisk do pobierania pdf'a zestawiającego wszystkie zamówienia klienta
 
 							echo '<center><form id="name_form" method="POST" action="generate_factures_to_pdf.php">
