@@ -2,6 +2,7 @@ package wti.manager.inteligenttags;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -23,6 +24,8 @@ import wti.manager.utils.Utils;
 
 public class InteligentTags {
 
+	static AtomicBoolean cancel;
+	
 	public static void refreshTags(Product product) {
 		
 		ProgressBarDialog<List<String>> progressBarDialog = new ProgressBarDialog<List<String>>(Utils.getShell(), SWT.TITLE | SWT.BORDER | SWT.APPLICATION_MODAL);
@@ -30,10 +33,12 @@ public class InteligentTags {
 		progressBarDialog.setDescription("Automatyczne dopasowywanie tagów na podstawie opisu produktu,\nprzy u¿yciu inteligentnego algorytmu.");
 		boolean canceled = progressBarDialog.open((AtomicBoolean closing) -> 
 		{
+			cancel = closing; 
 			String description = product.getReadableDescription();
-			description = description.replaceAll("[,.]", "");
-			String []wordsbefore = description.split(" ");
-			
+			description = description.replaceAll("[,.();:]", "");
+			description = description.toLowerCase();
+			String []wordsbefore = description.split("[ \n]");
+	
 			List<String> ListOfTags2 = new ArrayList<String>();
 		    
 			ListOfTags2 = findTags(deleteStopwords(wordsbefore));
@@ -42,13 +47,25 @@ public class InteligentTags {
 		
 		if (canceled)
 			return;
-		
 		List<String> ListOfTagsFromDescription = progressBarDialog.getResult(); //return value from progressBar-code
-	
+		if(ListOfTagsFromDescription.isEmpty()) //if canceled inside progressBar code
+			return;
+		
+		String name = product.getName(); //get words from product name
+		name = name.toLowerCase();
+		String[]TagFromName = name.split(" ");
+		for(String record : TagFromName)
+		{
+			if(!ListOfTagsFromDescription.contains(record))
+			{
+				ListOfTagsFromDescription.add(record);
+			}	
+		}
+		
 		List<ProposedTag> proposedTags = new LinkedList<ProposedTag>();
 		Set<Tag> tagFromProductSet = product.getTags();
 		List<String> listToDisplay = new ArrayList<>();
-		
+	
 		for(Tag item : tagFromProductSet) //tag to new list from product 
 		{
 			listToDisplay.add(item.getName());
@@ -101,6 +118,9 @@ public class InteligentTags {
 			
 			for(String wyr : wordsBefore)
 			{
+				if (cancel.get())
+					return null;
+				
 				if(!stopwords.contains(wyr.toLowerCase()))
 				{
 					words.add(wyr.toLowerCase());
@@ -108,11 +128,16 @@ public class InteligentTags {
 			}
 		} catch (IOException e) 
 		{
-			out.println("InteligenTags error: Wikipedia Stopwords. Return default words from input.");
+			out.println("InteligentTags error: Wikipedia Stopwords. Return default words from input.");
 			//e.printStackTrace();
 			List<String> listOut = new ArrayList<String>();
 			for(String w : wordsBefore)
-				{listOut.add(w);}
+				{
+				if (cancel.get())
+					return null;
+				
+				listOut.add(w);
+				}
 			return  listOut;
 		}
 		
@@ -126,6 +151,9 @@ public class InteligentTags {
 		
 		for (String wordFromDescription : words) 
 		{
+			if (cancel.get())
+				return null;
+			
 			try 
 			{
 				doc = Jsoup.connect("http://sjp.pl/" + wordFromDescription).get();
@@ -143,8 +171,9 @@ public class InteligentTags {
 				}
 			} catch (IOException e) 
 			{
-				out.println("InteligenTags error: SJP. Return default words from input.");
-				ListOfTags.addAll(words);
+				out.println("InteligentTags error: SJP. Return default words from input: "+wordFromDescription);
+				//ListOfTags.addAll(words);
+				ListOfTags.add(wordFromDescription);
 				//e.printStackTrace();
 			}
 			
@@ -173,7 +202,7 @@ public class InteligentTags {
 			
 		} catch (IOException e) 
 		{
-			out.println("InteligenTags error: Wikipedia step2. Return default words from input.");
+			out.println("InteligentTags error: Wikipedia step2. Return default words from input: "+wordFromDescription);
 			ListOfTags.add(wordFromDescription);
 			//e.printStackTrace(); 
 		}
