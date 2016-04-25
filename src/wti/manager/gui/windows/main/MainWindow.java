@@ -71,11 +71,7 @@ public class MainWindow {
 	}
 	
 	private void onTabSelection() {
-		TabItem selectedTabItem = tabFolder.getSelection()[0];
-		Control selectedTabItemControl = selectedTabItem.getControl();
-		if (selectedTabItemControl instanceof DatabaseTableTabComposite<?>) {
-			((DatabaseTableTabComposite<?>) selectedTabItemControl).refresh();
-		}
+		refreshSelectedTab();
 	}
 
 	private void createTabs() {
@@ -89,6 +85,23 @@ public class MainWindow {
 		TabItem tbtmTags = new TabItem(tabFolder, SWT.NONE);
 		tbtmTags.setText(name);
 		tbtmTags.setControl(tabComposite);
+		if (tabFolder.getItemCount() == 1)
+			refreshTab(tabComposite);
+	}
+	
+	private void refreshSelectedTab() {
+		TabItem selectedTabItem = tabFolder.getSelection()[0];
+		Control selectedTabItemControl = selectedTabItem.getControl();
+		if (selectedTabItemControl != null)
+			refreshTab(selectedTabItemControl);
+	}
+	
+	private static void refreshTab(Control control) {
+		if (control instanceof DatabaseTableTabComposite<?>) {
+			((DatabaseTableTabComposite<?>) control).refresh();
+		} else {
+			throw new RuntimeException("Not supported tab type!");
+		}
 	}
 
 	private void openShell(Shell shell) {

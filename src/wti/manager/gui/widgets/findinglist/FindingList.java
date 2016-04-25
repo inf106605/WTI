@@ -34,7 +34,6 @@ public abstract class FindingList<T extends IHasId> extends Composite {
 		super(parent, style);
 		setLayout();
 		createControls();
-		refresh();
 	}
 
 	private void setLayout() {
