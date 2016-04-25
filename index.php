@@ -32,7 +32,7 @@
                 <?php include 'sidebar.php'; ?>
 
                 <div class="col-md-9">
-
+					<center><h1>OSTATNIO DODANE PRODUKTY</h1></center>
                     <div class="row carousel-holder">
 
                         <div class="col-md-12">

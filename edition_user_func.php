@@ -2,7 +2,7 @@
 
 session_start();
 
-include '../db.php';
+include('../db.php');
 
 if (isset($_SESSION['user'])) {
 
@@ -29,18 +29,18 @@ if (isset($_SESSION['user'])) {
 		$id_contact = $result['id_contact'];
 		$id_adress = $result['id_adress'];		
     }
+	
 
-
-    if (isset($_POST['surname'])) {
+    if (isset($_POST['surname']) && $_POST["surname"] != "" ) {
 		
 		$statement1 = $dbh->prepare("UPDATE Client SET surname = ? WHERE id_client = ?");
 		if($statement1->execute(array($_POST['surname'],$id_client)));
 		else
 		{
 			echo "Error: UPDATE Client SET surname...";
-		}	
+		}
     }
-    if (isset($_POST['name'])) {
+    if (isset($_POST['name']) && $_POST["name"] != "") {
 		
 		$statement1 = $dbh->prepare("UPDATE Client SET name = ? WHERE id_client = ?");
 		if($statement1->execute(array($_POST['name'],$id_client)));
@@ -50,7 +50,7 @@ if (isset($_SESSION['user'])) {
 		}	
     }
 
-    if (isset($_POST['email'])) {
+    if (isset($_POST['email']) && $_POST["email"] != "") {
 		
 		$statement1 = $dbh->prepare("UPDATE Contact SET email = ? WHERE id_contact = ?");
 		if($statement1->execute(array($_POST['email'],$id_contact)));
@@ -60,7 +60,7 @@ if (isset($_SESSION['user'])) {
 		}	
     }
 
-    if (isset($_POST['street'])) {
+    if (isset($_POST['street']) && $_POST["street"] != "") {
 		
 		$statement1 = $dbh->prepare("UPDATE Addresses SET street = ? WHERE id_adress = ?");
 		if($statement1->execute(array($_POST['street'],$id_adress)));
@@ -71,7 +71,7 @@ if (isset($_SESSION['user'])) {
     }
 
 
-    if (isset($_POST['number_house'])) {
+    if (isset($_POST['number_house']) && $_POST["number_house"] != "") {
 		
 		$statement1 = $dbh->prepare("UPDATE Addresses SET number_house = ? WHERE id_adress = ?");
 		if($statement1->execute(array($_POST['number_house'],$id_adress)));
@@ -81,7 +81,7 @@ if (isset($_SESSION['user'])) {
 		}	
     }
 
-    if (isset($_POST['number_local'])) {
+    if (isset($_POST['number_local']) && $_POST["number_local"] != "") {
 		
 		$statement1 = $dbh->prepare("UPDATE Addresses SET number_local = ? WHERE id_adress = ?");
 		if($statement1->execute(array($_POST['number_local'],$id_adress)));
@@ -91,7 +91,7 @@ if (isset($_SESSION['user'])) {
 		}
     }
 
-    if (isset($_POST['city'])) {
+    if (isset($_POST['city']) && $_POST["city"] != "") {
 		
 		$statement1 = $dbh->prepare("UPDATE Addresses SET city = ? WHERE id_adress = ?");
 		if($statement1->execute(array($_POST['city'],$id_adress)));
@@ -101,7 +101,7 @@ if (isset($_SESSION['user'])) {
 		}
     }
 	
-	if (isset($_POST['postal_code'])) {
+	if (isset($_POST['postal_code']) && $_POST["postal_code"] != "") {
 		
 		$statement1 = $dbh->prepare("UPDATE Addresses SET postal_code = ? WHERE id_adress = ?");
 		if($statement1->execute(array($_POST['postal_code'],$id_adress)));
@@ -112,7 +112,7 @@ if (isset($_SESSION['user'])) {
     }
 	
 	
-	if (isset($_POST['country'])) {
+	if (isset($_POST['country']) && $_POST["country"] != "") {
 		
 		$statement1 = $dbh->prepare("UPDATE Addresses SET country = ? WHERE id_adress = ?");
 		if($statement1->execute(array($_POST['country'],$id_adress)));
@@ -123,7 +123,7 @@ if (isset($_SESSION['user'])) {
     }
 	
 	
-	if (isset($_POST['province'])){
+	if (isset($_POST['province']) && $_POST["province"] != ""){
 		
 		$statement1 = $dbh->prepare("UPDATE Addresses SET province = ? WHERE id_adress = ?");
 		if($statement1->execute(array($_POST['province'],$id_adress)));
@@ -133,9 +133,7 @@ if (isset($_SESSION['user'])) {
 		}	
     }
 	
-	if(isset($_POST['pass']) && isset($_POST['cpass']) && ($_POST['pass'] == $_POST['cpass'])){
-		
-		if($_POST['pass'] == "") return;
+	if(isset($_POST['pass']) && isset($_POST['cpass']) && ($_POST['pass'] == $_POST['cpass']) && $_POST['pass'] != ""){
 		
 		// zamiana hasła na skrót md5 i zapisanie do bazy danych
 		
@@ -150,7 +148,7 @@ if (isset($_SESSION['user'])) {
 	}
 	
 	
-	if (isset($_POST['number_telephone'])) {
+	if (isset($_POST['number_telephone']) && $_POST["number_telephone"] != "") {
 		
 		$statement1 = $dbh->prepare("UPDATE Contact SET number_telephone = ? WHERE id_contact = ?");
 		if($statement1->execute(array($_POST['number_telephone'],$id_contact)));
@@ -160,7 +158,7 @@ if (isset($_SESSION['user'])) {
 		}	
     }
 	
-	if (isset($_POST['fax'])) {
+	if (isset($_POST['fax']) && $_POST["fax"] != "") {
 		
 		$statement1 = $dbh->prepare("UPDATE Contact SET fax = ? WHERE id_contact = ?");
 		if($statement1->execute(array($_POST['fax'],$id_contact)));
@@ -170,7 +168,7 @@ if (isset($_SESSION['user'])) {
 		}	
     }
 	
-	if (isset($_POST['nip'])) {
+	if (isset($_POST['nip']) && $_POST["nip"] != "") {
 		
 		$statement1 = $dbh->prepare("UPDATE Client SET nip = ? WHERE id_client = ?");
 		if($statement1->execute(array($_POST['nip'],$id_client)));
@@ -181,7 +179,7 @@ if (isset($_SESSION['user'])) {
     }
 	
 	
-	if (isset($_POST['website'])) {
+	if (isset($_POST['website']) && $_POST["website"] != "") {
 		
 		$statement1 = $dbh->prepare("UPDATE Contact SET site = ? WHERE id_contact = ?");
 		if($statement1->execute(array($_POST['website'],$id_contact)));
@@ -190,9 +188,15 @@ if (isset($_SESSION['user'])) {
 			echo "Error: UPDATE Contact SET site...";
 		}
     }
+
+	echo '<a href="edition_user.php">Powrót na stronę edycji profilu...</a>';
+	echo '<script>setTimeout(function(){location.href="edition_user.php", 1000} );</script>';
 	
 }
-
-echo '<script>setTimeout(function(){location.href="edition_user.php", 1000} );</script>';
+else 
+{
+	echo '<a href="index.php">Powrót na stronę główną...</a>';
+	echo '<script>setTimeout(function(){location.href="index.php", 1000} );</script>';
+}
 
 ?>
