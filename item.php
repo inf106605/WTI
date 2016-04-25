@@ -45,9 +45,16 @@
                                     <div class="caption-full">
                                         <h1>' . $result['name_product'] . ' </h1>
                                         <span class="price">' . $result['price_brutto'] . ' zł</span>
-                                        <div class="description">' . $result['descriptions'] . '</div>
-                                        <button type="submit" class="btn btn-default big-button">Dodaj do koszyka</button>
-                                    </div>
+                                        <div class="description">' . $result['descriptions'] . '</div>';
+										if($result['amount'] > 0)
+										{
+											echo '<button type="submit" class="btn btn-default big-button">Dodaj do koszyka</button>';
+										}
+										else 
+										{
+											echo '<h2>Brak produktów na stanie!</h2>';
+										}
+                                echo    '</div>
                                 </form>';
                             }
 							
