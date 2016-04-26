@@ -184,13 +184,59 @@ echo '<img src="'.$LabChartsBar->getChart().'" />';
 						$LabChartsLine = new LabChartsLine();
 						$LabChartsLine->setData($array_data_money);
 						$LabChartsLine->setColors('D9351C');
-						$LabChartsLine->setSize('400x250');
+						$LabChartsLine->setSize('700x300');
 						$LabChartsLine->setTitle('Wydatki w poszczególnych miesiącach '.date("Y").' roku');
 						$LabChartsLine->setAxis ($scale_y, 'Sty||Lut||Mar||Kwi||Maj||Cze||Lip||Sie||Wrz||Paź||Lis||Gru|');
 						$LabChartsLine->setGrids (12);
 						
 						echo '<img src="'.$LabChartsLine->getChart().'" />';
 
+						// % udział kategorii , z których najczęściej klient kupuje swoje produkty 
+						
+						$sth = $dbh->prepare("SELECT cat.name, COUNT(p.id_category) AS count_category FROM Products AS p 
+											  INNER JOIN Category AS cat
+                                              ON cat.id_category = p.id_category
+											  INNER JOIN OrdersProducts AS op
+											  ON p.id_product=op.id_product
+											  INNER JOIN Orders AS o 
+											  ON o.id_order  = op.id_order
+											  INNER JOIN Client AS c 
+											  ON c.id_client = o.id_client
+											  WHERE c.user_login = ?
+											  GROUP BY p.id_category");
+						$sth->execute(array($nazwa_uzytkownika));
+						$results = $sth->fetchAll();
+						
+						$array_data_category_count = array();
+						$array_data_category_name = array();
+						foreach($results as $result) 
+						{						
+							array_push($array_data_category_count,$result['count_category']);
+							array_push($array_data_category_name,$result['name']);
+						}
+						
+						$LabChartsPie = new LabChartsPie();
+						$LabChartsPie->setData($array_data_category_count);
+						$LabChartsPie->setType('p3');
+						$LabChartsPie->setTitle('Procentowy udział kategorii kupowanych produktów');
+						$LabChartsPie->setSize('700x300');
+						$LabChartsPie->setColors('D9351C');
+						$labelsString = '';
+
+						foreach($array_data_category_name as $result) 
+						{
+								$labelsString .= $result.'|';							
+						}
+						
+						$labelsString = rtrim($labelsString, "|");
+						
+						//echo $labelsString;
+						
+						$LabChartsPie->setLabels($labelsString);
+
+						echo '<br/><br/><br/><img src="'.$LabChartsPie->getChart().'" />';
+						
+						
 
                     }
                     ?>
