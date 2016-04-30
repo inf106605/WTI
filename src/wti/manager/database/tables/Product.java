@@ -16,6 +16,8 @@ import javax.persistence.Table;
 
 import org.hibernate.Criteria;
 import org.hibernate.Session;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import wti.manager.interfaces.INamedTableRow;
 import wti.manager.utils.Utils;
@@ -35,6 +37,7 @@ public class Product implements INamedTableRow<Product> {
 	private String description = "";
 	
 	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@Fetch (FetchMode.SELECT)
 	@JoinTable(name = "products_has_tag", joinColumns = { 
 			@JoinColumn(name = "id_product", nullable = false, updatable = false) }, 
 			inverseJoinColumns = { @JoinColumn(name = "id_tag", 
@@ -43,10 +46,6 @@ public class Product implements INamedTableRow<Product> {
 	
 	
 	public Product() {
-	}
-	
-	public Product(String name) {
-		this.name = name;
 	}
 	
 	public int getId() {

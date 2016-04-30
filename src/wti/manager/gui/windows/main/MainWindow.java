@@ -16,6 +16,7 @@ import wti.manager.gui.images.Images;
 import wti.manager.gui.images.Images.IMAGES;
 import wti.manager.gui.tabs.DatabaseTableTabComposite;
 import wti.manager.gui.tabs.categories.CategoriesComposite;
+import wti.manager.gui.tabs.producers.ProducersComposite;
 import wti.manager.gui.tabs.products.ProductsComposite;
 import wti.manager.gui.tabs.tags.TagsComposite;
 
@@ -70,38 +71,37 @@ public class MainWindow {
 	}
 	
 	private void onTabSelection() {
-		TabItem selectedTabItem = tabFolder.getSelection()[0];
-		Control selectedTabItemControl = selectedTabItem.getControl();
-		if (selectedTabItemControl instanceof DatabaseTableTabComposite<?>) {
-			((DatabaseTableTabComposite<?>) selectedTabItemControl).refresh();
-		}
+		refreshSelectedTab();
 	}
 
 	private void createTabs() {
-		createTabTags();
-		createTabCategories();
-		createTabProducts();
+		createTab("Tagi", new TagsComposite(tabFolder, SWT.NONE));
+		createTab("Kategorie", new CategoriesComposite(tabFolder, SWT.NONE));
+		createTab("Producenci", new ProducersComposite(tabFolder, SWT.NONE));
+		createTab("Produkty", new ProductsComposite(tabFolder, SWT.NONE));
 	}
 
-	private void createTabTags() {
+	private void createTab(String name, Composite tabComposite) {
 		TabItem tbtmTags = new TabItem(tabFolder, SWT.NONE);
-		tbtmTags.setText("Tagi");
-		TagsComposite tagsComposite = new TagsComposite(tabFolder, SWT.NONE);
-		tbtmTags.setControl(tagsComposite);
+		tbtmTags.setText(name);
+		tbtmTags.setControl(tabComposite);
+		if (tabFolder.getItemCount() == 1)
+			refreshTab(tabComposite);
 	}
 	
-	private void createTabCategories() {
-		TabItem tbtmCategories = new TabItem(tabFolder, SWT.NONE);
-		tbtmCategories.setText("Kategorie");
-		CategoriesComposite categoriesComposite = new CategoriesComposite(tabFolder, SWT.NONE);
-		tbtmCategories.setControl(categoriesComposite);
+	private void refreshSelectedTab() {
+		TabItem selectedTabItem = tabFolder.getSelection()[0];
+		Control selectedTabItemControl = selectedTabItem.getControl();
+		if (selectedTabItemControl != null)
+			refreshTab(selectedTabItemControl);
 	}
-
-	private void createTabProducts() {
-		TabItem tbtmProducts = new TabItem(tabFolder, SWT.NONE);
-		tbtmProducts.setText("Produkty");
-		ProductsComposite productsComposite = new ProductsComposite(tabFolder, SWT.NONE);
-		tbtmProducts.setControl(productsComposite);
+	
+	private static void refreshTab(Control control) {
+		if (control instanceof DatabaseTableTabComposite<?>) {
+			((DatabaseTableTabComposite<?>) control).refresh();
+		} else {
+			throw new RuntimeException("Not supported tab type!");
+		}
 	}
 
 	private void openShell(Shell shell) {

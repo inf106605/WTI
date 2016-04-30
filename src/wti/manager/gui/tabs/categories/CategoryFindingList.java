@@ -17,8 +17,8 @@ public class CategoryFindingList extends FindingList<Category> {
 
 	@Override
 	protected List<Category> getDataFromDatabase() throws DatabaseException {
-		List<Category> tags = SessionUtils.getInSession(Category::getAll);
-		return tags;
+		List<Category> categories = SessionUtils.getInSession(Category::getAll);
+		return categories;
 	}
 
 	@Override

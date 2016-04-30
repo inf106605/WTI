@@ -31,10 +31,6 @@ public class Category implements INamedTableRow<Category> {
 	public Category() {
 	}
 	
-	public Category(String name) {
-		this.name = name;
-	}
-	
 	public int getId() {
 		return id;
 	}
@@ -64,7 +60,7 @@ public class Category implements INamedTableRow<Category> {
 	
 	@Override
 	public String toString() {
-		return "Categories["+id+"](\""+name+"\")";
+		return "Category["+id+"](\""+name+"\")";
 	}
 	
 	public Category clone() {

@@ -1,12 +1,13 @@
 package wti.manager.inteligenttags;
 
-import static java.lang.System.out;
-
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
-
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.Set;
+import static java.lang.System.*;
 import org.eclipse.swt.SWT;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -16,64 +17,99 @@ import wti.manager.database.tables.Product;
 import wti.manager.database.tables.Tag;
 import wti.manager.gui.dialogs.edittags.EditTagsDialog;
 import wti.manager.gui.dialogs.edittags.ProposedTag;
+import wti.manager.gui.dialogs.progressbar.ProgressBarDialog;
 import wti.manager.utils.DatabaseException;
 import wti.manager.utils.SessionUtils;
 import wti.manager.utils.Utils;
 
 public class InteligentTags {
 
+	static AtomicBoolean cancel;
+	
 	public static void refreshTags(Product product) {
-		String description = product.getReadableDescription();
-		List<String> ListOfTags = new ArrayList<String>();
-        
-		description = description.replaceAll("[,.]", ""); //usuniêcie zbêdnych znaków
-		String []wyrazyPrzed = description.split(" ");
-	
-		ListOfTags = findTags(deleteStopwords(wyrazyPrzed));
-	
-	//	ListOfTags.
-		/*
-		//Example code to get all tags
-		List<Tag> tags = SessionUtils.runInSession(Tag::getAll);
-		*/
 		
-		//Example code to show tag dialog
+		ProgressBarDialog<List<String>> progressBarDialog = new ProgressBarDialog<List<String>>(Utils.getShell(), SWT.TITLE | SWT.BORDER | SWT.APPLICATION_MODAL);
+		progressBarDialog.setText("Wyszukiwanie tagów");
+		progressBarDialog.setDescription("Automatyczne dopasowywanie tagów na podstawie opisu produktu,\nprzy u¿yciu inteligentnego algorytmu.");
+		boolean canceled = progressBarDialog.open((AtomicBoolean closing) -> 
+		{
+			cancel = closing; 
+			String description = product.getReadableDescription();
+			description = description.replaceAll("[,.();:]", "");
+			description = description.toLowerCase();
+			String []wordsbefore = description.split("[ \n]");
+	
+			List<String> ListOfTags2 = new ArrayList<String>();
+		    
+			ListOfTags2 = findTags(deleteStopwords(wordsbefore));
+			return ListOfTags2;
+		});
+		
+		if (canceled)
+			return;
+		List<String> ListOfTagsFromDescription = progressBarDialog.getResult(); //return value from progressBar-code
+		if(ListOfTagsFromDescription.isEmpty()) //if canceled inside progressBar code
+			return;
+		
+		String name = product.getName(); //get words from product name
+		name = name.toLowerCase();
+		String[]TagFromName = name.split(" ");
+		for(String record : TagFromName)
+		{
+			if(!ListOfTagsFromDescription.contains(record))
+			{
+				ListOfTagsFromDescription.add(record);
+			}	
+		}
 		
 		List<ProposedTag> proposedTags = new LinkedList<ProposedTag>();
-		
-		for(String el : ListOfTags)
+		Set<Tag> tagFromProductSet = product.getTags();
+		List<String> listToDisplay = new ArrayList<>();
+	
+		for(Tag item : tagFromProductSet) //tag to new list from product 
 		{
-			proposedTags.add(new ProposedTag(el, null, false));
+			listToDisplay.add(item.getName());
+			proposedTags.add(new ProposedTag(item.getName(), null, true));
 		}
-		//proposedTags.add(new ProposedTag("omg", new Tag(), false));
-		//proposedTags.add(new ProposedTag("wow", null, true));
-		//proposedTags.add(new ProposedTag("humf", new Tag(), true));
+		
+		//add only new tag to list
+		for(String el : ListOfTagsFromDescription) 
+		{
+			if(!listToDisplay.contains(el))
+			{
+				listToDisplay.add(el);
+				proposedTags.add(new ProposedTag(el, null, false));
+			}
+		}
 		
 		EditTagsDialog editTagsDialog = new EditTagsDialog(Utils.getShell(), SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL, proposedTags);
 		if (!editTagsDialog.open())
 			return; //Cancel
+		
 		
 		//OK
 		for(ProposedTag item : proposedTags)
 		{
 			if (item.isSelected() && !item.isExists())
 			{
-				
-				try {
-					Tag addTag = createNewTagsFromNames(item.getName());
-					product.getTags().add(addTag);
-				} catch (DatabaseException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					try 
+					{
+						Tag addTag = createNewTagsFromNames(item.getName());
+						product.getTags().add(addTag);
+					} catch (DatabaseException e) 
+					{	
+						e.printStackTrace();
+					}
 				}
 			}
-		}
+			
 	}
+	
 	
 	private static List<String> deleteStopwords(String[] wordsBefore)
 	{
 		Document doc = null;
-		List<String> wyrazy = new ArrayList<String>();
+		List<String> words = new ArrayList<String>();
 		
 		try 
 		{
@@ -82,44 +118,63 @@ public class InteligentTags {
 			
 			for(String wyr : wordsBefore)
 			{
+				if (cancel.get())
+					return null;
+				
 				if(!stopwords.contains(wyr.toLowerCase()))
 				{
-					wyrazy.add(wyr.toLowerCase());
+					words.add(wyr.toLowerCase());
 				}
 			}
 		} catch (IOException e) 
 		{
-			e.printStackTrace();
+			out.println("InteligentTags error: Wikipedia Stopwords. Return default words from input.");
+			//e.printStackTrace();
+			List<String> listOut = new ArrayList<String>();
+			for(String w : wordsBefore)
+				{
+				if (cancel.get())
+					return null;
+				
+				listOut.add(w);
+				}
+			return  listOut;
 		}
 		
-		return wyrazy; 
+		return words; 
 	}
 	
-	private static List<String> findTags(List<String> wyrazy)
+	private static List<String> findTags(List<String> words)
 	{
 		Document doc = null;
 		List<String> ListOfTags = new ArrayList<String>();
 		
-		for (String wyr : wyrazy) 
+		for (String wordFromDescription : words) 
 		{
+			if (cancel.get())
+				return null;
+			
 			try 
 			{
-				doc = Jsoup.connect("http://sjp.pl/" + wyr).get();
+				doc = Jsoup.connect("http://sjp.pl/" + wordFromDescription).get();
 				Elements elems = doc.select("th[colspan]");
-				if(!elems.isEmpty()) //jeœli nie ma takiego s³owa
+				if(!elems.isEmpty()) //word exist in dictionary and has basic form
 				{
-					String elem = elems.first().text();
+					String firstWordFromSJP = elems.first().text();  // get only first result
 					//Wiki
-					//okreœlenie czêœci mowy wyrazu
-					ListOfTags.addAll(findInWiki(elem, wyr));
+					//get part of speech
+					ListOfTags.addAll(findInWiki(firstWordFromSJP, wordFromDescription));
 				}
-				else
+				else//if the word isn't exist in dictionary, because contain others type : 26" [it is a tag]
 				{
-					ListOfTags.add(wyr);
+					ListOfTags.add(wordFromDescription);
 				}
 			} catch (IOException e) 
-				{
-				e.printStackTrace();
+			{
+				out.println("InteligentTags error: SJP. Return default words from input: "+wordFromDescription);
+				//ListOfTags.addAll(words);
+				ListOfTags.add(wordFromDescription);
+				//e.printStackTrace();
 			}
 			
 			
@@ -128,33 +183,34 @@ public class InteligentTags {
 		return ListOfTags;
 	}
 	
-	private static List<String> findInWiki(String elem, String wyr)
+	private static List<String> findInWiki(String firstWordFromSJP, String wordFromDescription)
 	{
 		Document doc = null;
 		List<String> ListOfTags = new ArrayList<String>();
 		
 		try 
 		{
-			doc = Jsoup.connect("https://pl.wiktionary.org/wiki/" + elem).get();
+			doc = Jsoup.connect("https://pl.wiktionary.org/wiki/" + firstWordFromSJP).get();
 			
-			//Elements elem2 = doc.select("body p dfn i");
 			Elements elem2 = doc.select("div > p > dfn > i");
 			
 			String str2 = elem2.text();
 			if (str2.contains("rzeczownik"))
 			{
-				ListOfTags.add(elem);
+				ListOfTags.add(firstWordFromSJP);
 			}
 			
 		} catch (IOException e) 
 		{
-			ListOfTags.add(wyr);
+			out.println("InteligentTags error: Wikipedia step2. Return default words from input: "+wordFromDescription);
+			ListOfTags.add(wordFromDescription);
 			//e.printStackTrace(); 
 		}
 		
 		return ListOfTags;
 	}
 	
+	@SuppressWarnings("unused")
 	private static List<Tag> createNewTagsFromNames(Iterable<String> newTagNames) throws DatabaseException {
 		List<Tag> newTags = new LinkedList<Tag>();
 		for (String newTagName : newTagNames) {

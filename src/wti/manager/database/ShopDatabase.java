@@ -6,6 +6,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 
 import wti.manager.database.tables.Category;
+import wti.manager.database.tables.Producer;
 import wti.manager.database.tables.Product;
 import wti.manager.database.tables.Tag;
 
@@ -26,8 +27,9 @@ public class ShopDatabase {
 	public static Configuration createConfiguration() {
 		Configuration configuration = new Configuration().configure(configurationFile);
 		configuration.addAnnotatedClass(Tag.class);
-		configuration.addAnnotatedClass(Product.class);
 		configuration.addAnnotatedClass(Category.class);
+		configuration.addAnnotatedClass(Producer.class);
+		configuration.addAnnotatedClass(Product.class);
 		return configuration;
 	}
 	

@@ -14,7 +14,7 @@ import org.eclipse.swt.widgets.MessageBox;
 
 import wti.manager.interfaces.ICloneable;
 
-public abstract class PropertiesComposite<T extends ICloneable<T>> extends Composite {
+public abstract class BasePropertiesComposite<T extends ICloneable<T>> extends Composite {
 
 	public static interface INewListener {
 		public void onNew();
@@ -43,7 +43,7 @@ public abstract class PropertiesComposite<T extends ICloneable<T>> extends Compo
 	private Button btnDelete;
 	
 	
-	public PropertiesComposite(Composite parent, int style, T emptyData) {
+	public BasePropertiesComposite(Composite parent, int style, T emptyData) {
 		super(parent, style);
 		this.emptyData = emptyData;
 		setLayout();
