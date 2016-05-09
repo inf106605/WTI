@@ -2,7 +2,6 @@ package wti.manager.inteligenttags;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -37,10 +36,18 @@ public class InteligentTags {
 			String description = product.getReadableDescription();
 			description = description.replaceAll("[,.();:]", "");
 			description = description.toLowerCase();
-			String []wordsbefore = description.split("[ \n]");
-	
+			String []wordsbefore = description.split("[ \n]"); 
+			List<String> listWithoutShortWords = new ArrayList<String>();
 			List<String> ListOfTags2 = new ArrayList<String>();
-		    
+			
+		    for(String wordToCheck : wordsbefore)
+		    {
+		    	if(wordToCheck.length()>2)
+		    	{
+		    		listWithoutShortWords.add(wordToCheck);
+		    	}
+		    }
+			
 			ListOfTags2 = findTags(deleteStopwords(wordsbefore));
 			return ListOfTags2;
 		});
@@ -54,7 +61,7 @@ public class InteligentTags {
 		String name = product.getName(); //get words from product name
 		name = name.toLowerCase();
 		String[]TagFromName = name.split(" ");
-		for(String record : TagFromName)
+		for(String record : TagFromName)//add all words from product name
 		{
 			if(!ListOfTagsFromDescription.contains(record))
 			{
@@ -103,7 +110,7 @@ public class InteligentTags {
 				}
 			}
 			
-	}
+	}//end refresh tags
 	
 	
 	private static List<String> deleteStopwords(String[] wordsBefore)
@@ -114,21 +121,9 @@ public class InteligentTags {
 		try 
 		{
 			doc = Jsoup.connect("https://pl.wikipedia.org/wiki/Wikipedia:Stopwords").get();
-			String stopwords = doc.select("p").get(1).text();
-			
-			for(String wyr : wordsBefore)
-			{
-				if (cancel.get())
-					return null;
-				
-				if(!stopwords.contains(wyr.toLowerCase()))
-				{
-					words.add(wyr.toLowerCase());
-				}
-			}
 		} catch (IOException e) 
-		{
-			out.println("InteligentTags error: Wikipedia Stopwords. Return default words from input.");
+		{//site is not available
+			out.println("InteligentTags error: Error with open wikipedia Stopwords. Return default words from input.");
 			//e.printStackTrace();
 			List<String> listOut = new ArrayList<String>();
 			for(String w : wordsBefore)
@@ -141,6 +136,15 @@ public class InteligentTags {
 			return  listOut;
 		}
 		
+		String stopwords = doc.select("p").get(1).text(); 
+		for(String wyr : wordsBefore)
+		{
+			if (cancel.get())
+				return null;
+			
+			if(!stopwords.contains(wyr.toLowerCase()))
+				words.add(wyr.toLowerCase()); //return word, when it isn't stopword 
+		}
 		return words; 
 	}
 	
@@ -161,13 +165,17 @@ public class InteligentTags {
 				if(!elems.isEmpty()) //word exist in dictionary and has basic form
 				{
 					String firstWordFromSJP = elems.first().text();  // get only first result
-					//Wiki
-					//get part of speech
-					ListOfTags.addAll(findInWiki(firstWordFromSJP, wordFromDescription));
+					if(firstWordFromSJP.length()>2) //add word >2 character
+					{
+						//Wiki
+						//get part of speech
+						ListOfTags.addAll(findInWiki(firstWordFromSJP, wordFromDescription));
+					}
 				}
-				else//if the word isn't exist in dictionary, because contain others type : 26" [it is a tag]
+				else//if the word isn't exist in dictionary, e.g. because contain others type : 26" [it is a tag] OR was problem with site
 				{
-					ListOfTags.add(wordFromDescription);
+					if(wordFromDescription.length()>2) //>2 character
+						ListOfTags.add(wordFromDescription);
 				}
 			} catch (IOException e) 
 			{
@@ -202,8 +210,8 @@ public class InteligentTags {
 			
 		} catch (IOException e) 
 		{
-			out.println("InteligentTags error: Wikipedia step2. Return default words from input: "+wordFromDescription);
-			ListOfTags.add(wordFromDescription);
+			//out.println("InteligentTags error: Wikipedia step2. Return default words from input: "+wordFromDescription);
+			//ListOfTags.add(wordFromDescription);
 			//e.printStackTrace(); 
 		}
 		
