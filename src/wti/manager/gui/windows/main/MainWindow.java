@@ -15,6 +15,7 @@ import org.eclipse.swt.widgets.TabItem;
 import wti.manager.gui.images.Images;
 import wti.manager.gui.images.Images.IMAGES;
 import wti.manager.gui.tabs.DatabaseTableTabComposite;
+import wti.manager.gui.tabs.backups.BackupsTabComposite;
 import wti.manager.gui.tabs.categories.CategoriesComposite;
 import wti.manager.gui.tabs.producers.ProducersComposite;
 import wti.manager.gui.tabs.products.ProductsComposite;
@@ -79,6 +80,7 @@ public class MainWindow {
 		createTab("Kategorie", new CategoriesComposite(tabFolder, SWT.NONE));
 		createTab("Producenci", new ProducersComposite(tabFolder, SWT.NONE));
 		createTab("Produkty", new ProductsComposite(tabFolder, SWT.NONE));
+		createTab("Kopie zapasowe", new BackupsTabComposite(tabFolder, SWT.NONE));
 	}
 
 	private void createTab(String name, Composite tabComposite) {
@@ -99,6 +101,7 @@ public class MainWindow {
 	private static void refreshTab(Control control) {
 		if (control instanceof DatabaseTableTabComposite<?>) {
 			((DatabaseTableTabComposite<?>) control).refresh();
+		} else if (control instanceof BackupsTabComposite) {
 		} else {
 			throw new RuntimeException("Not supported tab type!");
 		}
