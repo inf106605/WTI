@@ -71,7 +71,7 @@
 			var id_product = document.getElementsByName("id_product")[0].value;
 			var time_display = new Date();
 			// drugim argumentem będzie data oglądania produktu , żeby móc wstawiać rekomendacje powiązanych z produktów z aktualnie przeglądanymi
-			setCookie(id_product,time_display,1);
+			setCookie(id_product,time_display,15);
 		}
 		
 	}
