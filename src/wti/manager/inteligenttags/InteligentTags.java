@@ -179,7 +179,7 @@ public class InteligentTags {
 				}
 			} catch (IOException e) 
 			{
-				out.println("InteligentTags error: SJP. Return default words from input: "+wordFromDescription);
+				//out.println("InteligentTags error: SJP. Return default words from input: "+wordFromDescription);
 				//ListOfTags.addAll(words);
 				ListOfTags.add(wordFromDescription);
 				//e.printStackTrace();
