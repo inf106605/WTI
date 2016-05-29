@@ -243,6 +243,10 @@ public class InteligentTags {
 		SessionUtils.runInSession((session) -> {
 			for (Tag newTag : newTags) {
 				session.save(newTag);
+			}
+		});
+		SessionUtils.runInSession((session) -> {
+			for (Tag newTag : newTags) {
 				Tag createdTag = Tag.getByName(session, newTag.getName());
 				result.add(createdTag);
 			}
