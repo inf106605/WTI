@@ -15,7 +15,7 @@ public class TagPropertiesComposite extends AbstractPropertiesComposite<Tag> {
 	protected void createCompositeProperties() {
 		super.createCompositeProperties();
 		Composite compositeProperties = createCompositePropertiesItself();
-		createTextColumnControls(compositeProperties, "Nazwa", false, Tag::getName, Tag::setName);
+		createTextColumnControls(compositeProperties, "Nazwa", false, false, Tag::getName, Tag::setName);
 	}
 
 	@Override

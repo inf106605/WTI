@@ -30,8 +30,14 @@ public class ProductPropertiesComposite extends AbstractPropertiesComposite<Prod
 	protected void createCompositeProperties() {
 		super.createCompositeProperties();
 		Composite compositeProperties = createCompositePropertiesItself(3);
-		createTextColumnControls(compositeProperties, "Nazwa", false, Product::getName, Product::setName);
-		createTextColumnControls(compositeProperties, "Opis", true, Product::getReadableDescription, Product::setReadableDescription);
+		createTextColumnControls(compositeProperties, "Nazwa", false, false, Product::getName, Product::setName);
+		createTextColumnControls(compositeProperties, "Opis", true, false, Product::getReadableDescription, Product::setReadableDescription);
+		createTextColumnControls(compositeProperties, "Fotografia", false, true, Product::getPhotography, Product::setPhotography);
+		createSpinnerColumnControls(compositeProperties, "Cena netto", Product::getPriceNetto, Product::setPriceNetto);
+		createSpinnerColumnControls(compositeProperties, "Cena brutto", Product::getPriceBrutto, Product::setPriceBrutto);
+		createSpinnerColumnControls(compositeProperties, "Procent vat", Product::getPercentVat, Product::setPercentVat);
+		createSpinnerColumnControls(compositeProperties, "Dyskont", Product::getDiscount, Product::setDiscount);
+		createSpinnerColumnControls(compositeProperties, "Iloœæ", Product::getAmount, Product::setAmount);
 		createTagsControls(compositeProperties);
 	}
 

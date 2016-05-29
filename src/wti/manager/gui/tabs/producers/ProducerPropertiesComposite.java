@@ -15,10 +15,10 @@ public class ProducerPropertiesComposite extends AbstractPropertiesComposite<Pro
 	protected void createCompositeProperties() {
 		super.createCompositeProperties();
 		Composite compositeProperties = createCompositePropertiesItself();
-		createTextColumnControls(compositeProperties, "Nazwa", false, Producer::getName, Producer::setName);
-		createTextColumnControls(compositeProperties, "Regon", false, Producer::getRegon, Producer::setRegon);
-		createTextColumnControls(compositeProperties, "NIP", false, Producer::getNip, Producer::setNip);
-		createTextColumnControls(compositeProperties, "Telefon", false, Producer::getTelephone, Producer::setTelephone);
+		createTextColumnControls(compositeProperties, "Nazwa", false, false, Producer::getName, Producer::setName);
+		createTextColumnControls(compositeProperties, "Regon", false, false, Producer::getRegon, Producer::setRegon);
+		createTextColumnControls(compositeProperties, "NIP", false, false, Producer::getNip, Producer::setNip);
+		createTextColumnControls(compositeProperties, "Telefon", false, false, Producer::getTelephone, Producer::setTelephone);
 	}
 
 	@Override

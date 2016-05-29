@@ -15,8 +15,8 @@ public class CategoryPropertiesComposite extends AbstractPropertiesComposite<Cat
 	protected void createCompositeProperties() {
 		super.createCompositeProperties();
 		Composite compositeProperties = createCompositePropertiesItself();
-		createTextColumnControls(compositeProperties, "Nazwa", false, Category::getName, Category::setName);
-		createTextColumnControls(compositeProperties, "Opis", true, Category::getDescription, Category::setDescription);
+		createTextColumnControls(compositeProperties, "Nazwa", false, false, Category::getName, Category::setName);
+		createTextColumnControls(compositeProperties, "Opis", true, false, Category::getDescription, Category::setDescription);
 	}
 
 	@Override
