@@ -234,21 +234,30 @@ public class InteligentTags {
 		Tag newTag = new Tag();
 		newTag.setName(newTagName);
 		
-		createNewTags(newTag);
+		newTag = createNewTags(newTag);
 		return newTag;
 	}
 	
-	private static void createNewTags(Iterable<Tag> newTags) throws DatabaseException {
+	private static List<Tag> createNewTags(Iterable<Tag> newTags) throws DatabaseException {
+		final List<Tag> result = new LinkedList<Tag>();
 		SessionUtils.runInSession((session) -> {
 			for (Tag newTag : newTags) {
 				session.save(newTag);
+				Tag createdTag = Tag.getByName(session, newTag.getName());
+				result.add(createdTag);
 			}
 		});
+		return result;
 	}
 	
-	private static void createNewTags(Tag newTag) throws DatabaseException {
+	private static Tag createNewTags(Tag newTag) throws DatabaseException {
 		SessionUtils.runInSession((session) -> {
 				session.save(newTag);
-		});
+			});
+		Tag result = SessionUtils.getInSession((session) -> {
+				Tag createdTag = Tag.getByName(session, newTag.getName());
+				return createdTag;
+			});
+		return result;
 	}
 }

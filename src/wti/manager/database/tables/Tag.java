@@ -9,6 +9,7 @@ import javax.persistence.Table;
 
 import org.hibernate.Criteria;
 import org.hibernate.Session;
+import org.hibernate.criterion.Restrictions;
 
 import wti.manager.interfaces.INamedTableRow;
 import wti.manager.utils.Utils;
@@ -45,6 +46,13 @@ public class Tag implements INamedTableRow<Tag> {
 		@SuppressWarnings("unchecked")
 		List<Tag> tags = criteria.list();
 		return tags;
+	}
+	
+	public static Tag getByName(Session session, String name) {
+		Criteria criteria = session.createCriteria(Tag.class);
+		criteria.add(Restrictions.eq("name", name));
+		Tag tag = (Tag) criteria.uniqueResult();
+		return tag;
 	}
 	
 	@Override
