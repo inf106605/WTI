@@ -76,7 +76,7 @@ public class InteligentTags {
 		for(Tag item : tagFromProductSet) //tag to new list from product 
 		{
 			listToDisplay.add(item.getName());
-			proposedTags.add(new ProposedTag(item.getName(), null, true));
+			proposedTags.add(new ProposedTag(item.getName(), item, true));			//
 		}
 		
 		//add only new tag to list
@@ -97,18 +97,41 @@ public class InteligentTags {
 		//OK
 		for(ProposedTag item : proposedTags)
 		{
-			if (item.isSelected() && !item.isExists())
+			if (item.isSelected() && !item.isExists()) //add tag to product
 			{
-					try 
-					{
-						Tag addTag = createNewTagsFromNames(item.getName());
-						product.getTags().add(addTag);
-					} catch (DatabaseException e) 
-					{	
-						e.printStackTrace();
+				try
+				{
+					Tag result = SessionUtils.getInSession((session) -> {
+						Tag existsTag = Tag.getByName(session, item.getName());
+						return existsTag;
+					});
+				
+					if(result != null)
+					{ //add existing tag to product
+						product.getTags().add(result); //add 
 					}
+					else
+					{ //add new tag to product
+						try 
+						{
+							Tag addTag = createNewTagsFromNames(item.getName()); //create new tag to database
+							product.getTags().add(addTag); 
+						} catch (DatabaseException e) 
+						{	
+							e.printStackTrace();
+						}		
+					}
+				}catch (Exception e)
+				{	
+					e.printStackTrace();
 				}
 			}
+			
+			if (item.isSelected() == false )
+			{
+				product.getTags().remove(item.getTag());
+			}
+		}
 			
 	}//end refresh tags
 	
